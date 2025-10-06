@@ -1,0 +1,62 @@
+20:56:11.020 [restartedMain] INFO  i.c.finexp.FinExpApplication - Starting FinExpApplication using Java 17.0.16 with PID 18376 (D:\PROJECT X\FinExp\finexp_service\target\classes started by BLAISE MUGISHA in D:\PROJECT X\FinExp\finexp_service)
+20:56:11.032 [restartedMain] INFO  i.c.finexp.FinExpApplication - No active profile set, falling back to 1 default profile: "default"
+20:56:11.284 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+20:56:11.285 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+20:56:17.201 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+20:56:17.587 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 338 ms. Found 4 JPA repository interfaces.
+20:56:22.250 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+20:56:22.352 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+20:56:22.361 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+20:56:22.362 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+20:56:23.009 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+20:56:23.010 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 11723 ms
+20:56:24.038 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+20:56:24.361 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+20:56:24.600 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+20:56:25.259 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+20:56:26.327 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4a36757
+20:56:26.335 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+20:56:26.793 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+20:56:27.989 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+20:56:32.609 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+20:56:33.348 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+20:56:34.672 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+20:56:40.358 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+20:56:42.586 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+20:56:42.710 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+20:56:42.790 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+20:56:42.827 [restartedMain] INFO  i.c.finexp.FinExpApplication - Started FinExpApplication in 35.322 seconds (process running for 42.595)
+20:57:36.945 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+20:57:36.953 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+20:57:37.027 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 48 ms
+20:57:39.017 [http-nio-8080-exec-1] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+20:57:47.166 [http-nio-8080-exec-3] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+20:58:19.979 [http-nio-8080-exec-6] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+20:58:19.990 [http-nio-8080-exec-6] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+20:58:20.061 [http-nio-8080-exec-6] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+20:58:22.647 [http-nio-8080-exec-10] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:02:42.338 [http-nio-8080-exec-8] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:04:03.415 [http-nio-8080-exec-2] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:04:05.281 [http-nio-8080-exec-3] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:04:14.257 [http-nio-8080-exec-5] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:04:16.945 [http-nio-8080-exec-7] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:05:34.614 [http-nio-8080-exec-9] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:05:34.645 [http-nio-8080-exec-8] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:05:44.197 [http-nio-8080-exec-1] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:05:46.379 [http-nio-8080-exec-2] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:07:15.341 [http-nio-8080-exec-4] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:07:15.391 [http-nio-8080-exec-4] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:07:15.452 [http-nio-8080-exec-4] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:07:26.798 [http-nio-8080-exec-6] WARN  p.f.core.message.UserMessageUtility - Language en_us is not supported
+21:09:25.931 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+21:09:27.769 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+21:09:27.794 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+21:09:27.817 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+21:09:27.827 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
