@@ -57,6 +57,4 @@ public class ProductTypeEntity extends AbstractBaseEntity {
      */
     @Column(name = "sell_unit_price", nullable = true)
     private BigDecimal sellUnitPrice = BigDecimal.ZERO;
-
-
 }

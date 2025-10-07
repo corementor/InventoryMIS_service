@@ -8,7 +8,8 @@ import psychemesh.framework.common.util.EEntityLifeCycle;
 
 
 import java.util.List;
-import java.util.UUID;
+ import java.util.Optional;
+ import java.util.UUID;
 
 /**
  * The Interface IPurchaseOrder Repository
@@ -22,4 +23,7 @@ public interface IPurchaseOrderRepository extends JpaRepository<PurchaseOrderEnt
 
 
     List<PurchaseOrderEntity> findAllByState(EEntityLifeCycle state);
+
+    Optional<PurchaseOrderEntity> findByPurchaseCode(String purchaseCode);
+
 }

@@ -3,6 +3,7 @@ package io.corementor.finexp.inventory.resource;
 import io.corementor.finexp.inventory.productOrderItem.domain.ProductOrderItemEntity;
 import io.corementor.finexp.inventory.productOrderItem.service.ProductOrderItemQueryService;
 import io.corementor.finexp.inventory.productOrderItem.service.ProductOrderItemService;
+import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +56,17 @@ public class ProductOrderItemResource {
     @ResponseStatus(HttpStatus.OK)
     public Response<ProductOrderItemEntity> findProductOrderItemById(@RequestBody String id) {
         return productOrderItemQueryService.findProductOrderItemById(UUID.fromString(id), EEntityLifeCycle.ACTIVE);
+    }
+
+    /**
+     * Find Product Order Item By Purchase Order
+     * @param thePurchaseOrder the PurchaseOrder
+     * @return response
+     */
+    @PostMapping("/search/criteria/purchaseOrder")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<List<ProductOrderItemEntity>> findProductOrderItemByPurchaseOrder(@RequestBody PurchaseOrderEntity thePurchaseOrder) {
+        return productOrderItemQueryService.findAllByPurchaseOrder(thePurchaseOrder);
     }
 
     /**

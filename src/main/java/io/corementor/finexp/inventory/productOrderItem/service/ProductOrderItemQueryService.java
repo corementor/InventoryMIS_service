@@ -3,6 +3,7 @@ package io.corementor.finexp.inventory.productOrderItem.service;
 import io.corementor.finexp.inventory.base.IMessage;
 import io.corementor.finexp.inventory.productOrderItem.domain.ProductOrderItemEntity;
 import io.corementor.finexp.inventory.productOrderItem.repository.IProductOrderItemRepository;
+import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.ObjectNotFoundException;
@@ -36,10 +37,23 @@ public class ProductOrderItemQueryService {
      * @param id the id
      * @return response
      */
-    public Response<ProductOrderItemEntity> findProductOrderItemById(UUID id,EEntityLifeCycle state) {
-        ProductOrderItemEntity productType = productOrderItemRepository.findByIdAndState(id,state)
+    public Response<ProductOrderItemEntity> findProductOrderItemById(UUID id, EEntityLifeCycle state) {
+        ProductOrderItemEntity productType = productOrderItemRepository.findByIdAndState(id, state)
                 .orElseThrow(() -> new ObjectNotFoundException(IMessage.INFORMATION_NOT_FOUND, "Product type  object not found"));
         return new Response<>(productType, IMessage.INFORMATION_FOUND);
+    }
+
+    /**
+     * Find all by Purchase order and state
+     *
+     * @param thePurchaseOrder the Purchase order
+     * @return response
+     */
+    public Response<List<ProductOrderItemEntity>> findAllByPurchaseOrder(PurchaseOrderEntity thePurchaseOrder) {
+        List<ProductOrderItemEntity> productOrderItemEntityList = productOrderItemRepository.findAllByPurchaseOrderEntityAndState(thePurchaseOrder, EEntityLifeCycle.ACTIVE);
+
+        return
+                new Response<>(productOrderItemEntityList, productOrderItemEntityList.isEmpty() ? IUserMessage.INFORMATION_NOT_FOUND : IUserMessage.INFORMATION_FOUND);
     }
 
     /**

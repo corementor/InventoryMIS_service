@@ -62,7 +62,7 @@ public class ProductOrderItemEntity extends AbstractBaseEntity {
      */
     @ManyToOne
     @JoinColumn(name = "purchase_order_id", nullable = false)
-    @JsonBackReference("purchase-order-items")
+    @JsonBackReference
     private PurchaseOrderEntity purchaseOrderEntity;
     /**
      * The product type.

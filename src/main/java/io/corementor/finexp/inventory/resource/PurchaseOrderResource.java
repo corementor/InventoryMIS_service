@@ -44,6 +44,17 @@ public class PurchaseOrderResource {
     }
 
     /**
+     * Update purchase order
+     * @param thePurchaseOrder the purchase order
+     * @return response
+     */
+    @PostMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<PurchaseOrderEntity> updatePurchaseOrder(@RequestBody PurchaseOrderEntity thePurchaseOrder) {
+        return purchaseOrderService.updatePurchaseOrderWithItems(thePurchaseOrder);
+    }
+
+    /**
      * Find all purchase order
      *
      * @return response

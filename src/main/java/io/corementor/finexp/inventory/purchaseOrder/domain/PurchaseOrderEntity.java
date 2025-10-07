@@ -41,10 +41,8 @@ public class PurchaseOrderEntity extends AbstractBaseEntity {
      */
     @Column(name = "total_price", nullable = false)
     private BigDecimal totalPrice = BigDecimal.ZERO;
-    /**
-     * The orderItems
-     */
-    @OneToMany(mappedBy = "purchaseOrderEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("purchase-order-items")
+
+    @OneToMany(mappedBy = "purchaseOrderEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<ProductOrderItemEntity> orderItems = new ArrayList<>();
 }

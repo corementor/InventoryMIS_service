@@ -1,6 +1,7 @@
 package io.corementor.finexp.inventory.productOrderItem.repository;
 
 import io.corementor.finexp.inventory.productOrderItem.domain.ProductOrderItemEntity;
+import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +26,7 @@ public interface IProductOrderItemRepository extends JpaRepository<ProductOrderI
    
     List<ProductOrderItemEntity> findAllByState(EEntityLifeCycle state);
 
+    List<ProductOrderItemEntity> findAllByPurchaseOrderEntityAndState(PurchaseOrderEntity purchaseOrderEntity, EEntityLifeCycle state);
 
     Optional<ProductOrderItemEntity> findByIdAndState(UUID id, EEntityLifeCycle state);
 

@@ -44,7 +44,8 @@ public class ProductOrderItemService {
      */
     public Response<ProductOrderItemEntity> createProductOrderItem(ProductOrderItemEntity theProductOrderItem) {
         try {
-            if (theProductOrderItem == null) {
+            if (theProductOrderItem == null || theProductOrderItem.getPurchaseOrderEntity() == null
+                    || theProductOrderItem.getPurchaseOrderEntity().getId() == null) {
                 return new Response<>(null, IMessage.INVALID_INPUT);
             }
 
@@ -57,10 +58,14 @@ public class ProductOrderItemService {
             }
 
             // Validate product type exists
+            if (theProductOrderItem.getProductType() == null || theProductOrderItem.getProductType().getId() == null) {
+                return new Response<>(null, IMessage.INVALID_INPUT);
+            }
+
             Response<ProductTypeEntity> productTypeResponse = productTypeQueryService.findProductTypeById(
                     theProductOrderItem.getProductType().getId()
             );
-            if (productTypeResponse.getData() == null) {
+            if (productTypeResponse.getData() == null ) {
                 return new Response<>(null, IUserMessage.INFORMATION_NOT_FOUND);
             }
 
@@ -78,11 +83,18 @@ public class ProductOrderItemService {
                 theProductOrderItem.setUnitPrice(productType.getUnitPrice());
             }
 
-            // Calculate totals - FIXED: taxAmount is actual amount, not percentage
-            BigDecimal itemTotal = theProductOrderItem.getUnitPrice().multiply(BigDecimal.valueOf(theProductOrderItem.getQuantity()));
+            // Validate required fields
+            if (theProductOrderItem.getUnitPrice() == null || theProductOrderItem.getQuantity() <= 0) {
+                return new Response<>(null, IMessage.INVALID_INPUT);
+            }
+
+            // Calculate totals
+            BigDecimal itemTotal = theProductOrderItem.getUnitPrice()
+                    .multiply(BigDecimal.valueOf(theProductOrderItem.getQuantity()));
 
             // Use taxAmount directly as it's the actual tax amount
-            BigDecimal itemTax = theProductOrderItem.getTaxAmount();
+            BigDecimal itemTax = theProductOrderItem.getTaxAmount() != null ?
+                    theProductOrderItem.getTaxAmount() : BigDecimal.ZERO;
             BigDecimal itemTotalWithTax = itemTotal.add(itemTax);
 
             theProductOrderItem.setTotalTax(itemTax);
@@ -98,7 +110,7 @@ public class ProductOrderItemService {
 
         } catch (Exception ex) {
             log.error("Error creating product order item: {}", ex.getMessage(), ex);
-            return new Response<>(IUserMessage.INFORMATION_NOT_SAVED);
+            return new Response<>(null, IUserMessage.INFORMATION_NOT_SAVED);
         }
     }
 
@@ -123,7 +135,7 @@ public class ProductOrderItemService {
 
             // Recalculate totals with the updated values
             BigDecimal itemTotal = existingItem.getUnitPrice().multiply(BigDecimal.valueOf(existingItem.getQuantity()));
-            BigDecimal itemTax = existingItem.getTaxAmount(); // Use taxAmount directly
+            BigDecimal itemTax = existingItem.getTaxAmount() != null ? existingItem.getTaxAmount() : BigDecimal.ZERO;
             BigDecimal itemTotalWithTax = itemTotal.add(itemTax);
 
             existingItem.setTotalTax(itemTax);
@@ -132,25 +144,22 @@ public class ProductOrderItemService {
             ProductOrderItemEntity updatedItem = productOrderItemRepository.save(existingItem);
 
             // Update purchase order total
-            if (existingItem.getPurchaseOrderEntity() != null) {
-                updatePurchaseOrderTotal(existingItem.getPurchaseOrderEntity().getId());
-            }
+            updatePurchaseOrderTotal(existingItem.getPurchaseOrderEntity().getId());
 
             return new Response<>(updatedItem, IMessage.INFORMATION_UPDATED);
 
+        } catch (ObjectNotFoundException ex) {
+            log.error("Product order item not found: {}", ex.getMessage());
+            return new Response<>(null, IUserMessage.INFORMATION_NOT_FOUND);
         } catch (Exception ex) {
             log.error("Error updating product order item: {}", ex.getMessage(), ex);
-            return new Response<>(IUserMessage.ENTITY_IS_NOT_UPDATEABLE);
+            return new Response<>(null, IUserMessage.ENTITY_IS_NOT_UPDATEABLE);
         }
     }
 
     /**
      * Update purchase order total after item changes
      */
-    /**
-     * Update purchase order total after item changes
-     */
-
     private void updatePurchaseOrderTotal(UUID purchaseOrderId) {
         try {
             // Calculate total directly in database
@@ -161,11 +170,12 @@ public class ProductOrderItemService {
             }
 
             // Get and update purchase order
-            PurchaseOrderEntity purchaseOrder = purchaseOrderQueryService.findPurchaseOrderById(purchaseOrderId).getData();
+            PurchaseOrderEntity purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
+                    .orElse(null);
             if (purchaseOrder != null) {
                 purchaseOrder.setTotalPrice(newTotal);
                 purchaseOrder.setModifiedAt(LocalDateTime.now());
-                 purchaseOrderRepository.save(purchaseOrder);
+                purchaseOrderRepository.save(purchaseOrder);
 
                 log.debug("Updated purchase order {} total to: {}", purchaseOrderId, newTotal);
             }
@@ -190,11 +200,14 @@ public class ProductOrderItemService {
             // Update purchase order total after deletion
             updatePurchaseOrderTotal(purchaseOrderId);
 
-            return new Response<>(true, IUserMessage.INFORMATION_UPDATED);
+            return new Response<>(true, IUserMessage.INFORMATION_DELETED);
 
+        } catch (ObjectNotFoundException ex) {
+            log.error("Product order item not found: {}", ex.getMessage());
+            return new Response<>(false, IUserMessage.INFORMATION_NOT_FOUND);
         } catch (Exception ex) {
             log.error("Error deleting product order item: {}", ex.getMessage(), ex);
-            return new Response<>(false, IUserMessage.INFORMATION_NOT_FOUND);
+            return new Response<>(false, IUserMessage.ENTITY_IS_NOT_UPDATEABLE);
         }
     }
 }
