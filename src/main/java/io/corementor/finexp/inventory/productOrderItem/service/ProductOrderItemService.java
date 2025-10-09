@@ -1,6 +1,6 @@
 package io.corementor.finexp.inventory.productOrderItem.service;
 
-import io.corementor.finexp.inventory.base.IMessage;
+import io.corementor.finexp.base.IMessage;
 import io.corementor.finexp.inventory.productOrderItem.domain.ProductOrderItemEntity;
 import io.corementor.finexp.inventory.productType.domain.ProductTypeEntity;
 import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
@@ -18,8 +18,6 @@ import psychemesh.framework.core.response.Response;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -43,6 +41,7 @@ public class ProductOrderItemService {
      * Create product order item (standalone - for adding items to existing PO)
      */
     public Response<ProductOrderItemEntity> createProductOrderItem(ProductOrderItemEntity theProductOrderItem) {
+        log.info("CREATE PRODUCT  ODER  ITEM METHOD REACHED");
         try {
             if (theProductOrderItem == null || theProductOrderItem.getPurchaseOrderEntity() == null
                     || theProductOrderItem.getPurchaseOrderEntity().getId() == null) {
@@ -92,9 +91,10 @@ public class ProductOrderItemService {
             BigDecimal itemTotal = theProductOrderItem.getUnitPrice()
                     .multiply(BigDecimal.valueOf(theProductOrderItem.getQuantity()));
 
-            // Use taxAmount directly as it's the actual tax amount
+            // Calculate total tax
             BigDecimal itemTax = theProductOrderItem.getTaxAmount() != null ?
-                    theProductOrderItem.getTaxAmount() : BigDecimal.ZERO;
+                    theProductOrderItem.getTaxAmount().multiply(BigDecimal.valueOf(theProductOrderItem.getQuantity())) : BigDecimal.ZERO;
+
             BigDecimal itemTotalWithTax = itemTotal.add(itemTax);
 
             theProductOrderItem.setTotalTax(itemTax);

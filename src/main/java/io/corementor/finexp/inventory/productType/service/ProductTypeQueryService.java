@@ -1,6 +1,6 @@
 package io.corementor.finexp.inventory.productType.service;
 
-import io.corementor.finexp.inventory.base.IMessage;
+import io.corementor.finexp.base.IMessage;
 import io.corementor.finexp.inventory.productType.domain.ProductTypeEntity;
 import io.corementor.finexp.inventory.productType.repository.IProductTypeRepository;
 import lombok.RequiredArgsConstructor;

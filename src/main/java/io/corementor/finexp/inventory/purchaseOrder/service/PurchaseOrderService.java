@@ -1,7 +1,7 @@
 package io.corementor.finexp.inventory.purchaseOrder.service;
 
 
-import io.corementor.finexp.inventory.base.IMessage;
+import io.corementor.finexp.base.IMessage;
 import io.corementor.finexp.inventory.common.util.ESequencePrefix;
 import io.corementor.finexp.inventory.common.util.ESequenceType;
 import io.corementor.finexp.inventory.common.util.SequenceNumberGeneratorUtil;
@@ -15,14 +15,12 @@ import io.corementor.finexp.inventory.purchaseOrder.repository.IPurchaseOrderRep
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import psychemesh.framework.common.util.EEntityLifeCycle;
 import psychemesh.framework.core.message.IUserMessage;
 import psychemesh.framework.core.response.Response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,9 +46,10 @@ public class PurchaseOrderService {
      * Create purchase order with items
      */
     public Response<PurchaseOrderEntity> createPurchaseOrder(PurchaseOrderEntity thePurchaseOrderEntity) {
+        log.info("CREATE PURCHASE ODER METHOD REACHED");
         try {
             if (thePurchaseOrderEntity == null) {
-                return new Response<>(null, IMessage.INVALID_INPUT);
+                return new Response<>( IMessage.INVALID_INPUT);
             }
 
             // Generate purchase order number
@@ -96,7 +95,8 @@ public class PurchaseOrderService {
 
                     // Calculate item totals
                     BigDecimal itemTotal = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-                    BigDecimal itemTax = item.getTaxAmount() != null ? item.getTaxAmount() : BigDecimal.ZERO;
+
+                    BigDecimal itemTax = item.getTaxAmount() != null ? item.getTaxAmount().multiply(BigDecimal.valueOf(item.getQuantity())) : BigDecimal.ZERO;
                     BigDecimal itemTotalWithTax = itemTotal.add(itemTax);
 
                     item.setTotalTax(itemTax);
@@ -142,7 +142,7 @@ public class PurchaseOrderService {
                 return new Response<>(null, IUserMessage.INFORMATION_NOT_FOUND);
             }
 
-            // Update basic fields
+
             if (thePurchaseOrderEntity.getPurchaseDate() != null) {
                 existingOrder.setPurchaseDate(thePurchaseOrderEntity.getPurchaseDate());
             }
@@ -174,15 +174,12 @@ public class PurchaseOrderService {
             return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
 
         } catch (Exception ex) {
-            log.error("Error updating purchase order with items: {}", ex.getMessage(), ex);
-            return new Response<>(null, IMessage.INFORMATION_NOT_UPDATED);
+            log.error("Error creating purchase order with items: {}", ex.getMessage(), ex);
+            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
         }
     }
 
     private void updateOrderItems(PurchaseOrderEntity existingOrder, List<ProductOrderItemEntity> newItems) {
-        // This is a simplified version - you might need more complex logic
-        // depending on your requirements (add/update/delete items)
-
         // Clear existing items and add new ones
         existingOrder.getOrderItems().clear();
         for (ProductOrderItemEntity newItem : newItems) {

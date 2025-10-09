@@ -1,6 +1,6 @@
 package io.corementor.finexp.inventory.productOrderItem.service;
 
-import io.corementor.finexp.inventory.base.IMessage;
+import io.corementor.finexp.base.IMessage;
 import io.corementor.finexp.inventory.productOrderItem.domain.ProductOrderItemEntity;
 import io.corementor.finexp.inventory.productOrderItem.repository.IProductOrderItemRepository;
 import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;

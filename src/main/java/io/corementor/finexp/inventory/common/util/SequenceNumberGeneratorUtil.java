@@ -1,6 +1,6 @@
 package io.corementor.finexp.inventory.common.util;
 
-import io.corementor.finexp.inventory.base.ISequenceNumberService;
+import io.corementor.finexp.base.ISequenceNumberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

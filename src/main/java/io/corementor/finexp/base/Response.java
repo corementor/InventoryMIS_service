@@ -1,4 +1,4 @@
-package io.corementor.finexp.inventory.base;
+package io.corementor.finexp.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

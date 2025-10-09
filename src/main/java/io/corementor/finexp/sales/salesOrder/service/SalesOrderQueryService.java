@@ -1,9 +1,9 @@
-package io.corementor.finexp.inventory.purchaseOrder.service;
-
+package io.corementor.finexp.sales.salesOrder.service;
 
 import io.corementor.finexp.base.IMessage;
 import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
-import io.corementor.finexp.inventory.purchaseOrder.repository.IPurchaseOrderRepository;
+import io.corementor.finexp.sales.salesOrder.domain.SalesOrderEntity;
+import io.corementor.finexp.sales.salesOrder.repository.ISalesOrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.ObjectNotFoundException;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class PurchaseOrderQueryService.
+ * The Class Sales Order Query Service.
  *
  * @author Blaise Mugisha
  * @version 1.0
@@ -24,33 +24,35 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PurchaseOrderQueryService {
-
+public class SalesOrderQueryService {
     /**
-     * The purchase order repository.
+     * The sales order repository.
+     *
      */
-    private final IPurchaseOrderRepository purchaseOrderRepository;
+    private final ISalesOrderRepository saleOrderRepository;
 
     /**
-     * Find purchase order by id
+     * Find sales order by id
      *
      * @param id the id
      * @return response
      */
-    public Response<PurchaseOrderEntity> findPurchaseOrderById(UUID id) {
-        PurchaseOrderEntity purchaseOrderEntity = purchaseOrderRepository.findById(id)
+    public Response<SalesOrderEntity> findSalesOrderById(UUID id) {
+        SalesOrderEntity salesOrder = saleOrderRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(IMessage.INFORMATION_NOT_FOUND, "Purchase order object not found"));
-        return new Response<>(purchaseOrderEntity, IMessage.INFORMATION_FOUND);
+        return new Response<>(salesOrder, IMessage.INFORMATION_FOUND);
     }
 
     /**
-     * find all  purchase orders
+     * find all  sales orders
      * @return response
      */
-    public Response<List<PurchaseOrderEntity>> findAllPurchaseOrders() {
-        List<PurchaseOrderEntity> purchaseOrderList = purchaseOrderRepository
+    public Response<List<SalesOrderEntity>> findAllSalesOrders() {
+        List<SalesOrderEntity> purchaseOrderList = saleOrderRepository
                 .findAllByState(EEntityLifeCycle.ACTIVE);
 
         return new Response<>(purchaseOrderList, IUserMessage.INFORMATION_FOUND);
     }
+
+
 }

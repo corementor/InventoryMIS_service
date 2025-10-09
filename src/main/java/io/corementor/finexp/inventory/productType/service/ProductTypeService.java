@@ -1,7 +1,7 @@
 package io.corementor.finexp.inventory.productType.service;
 
 
-import io.corementor.finexp.inventory.base.IMessage;
+import io.corementor.finexp.base.IMessage;
 import io.corementor.finexp.inventory.common.util.ESequencePrefix;
 import io.corementor.finexp.inventory.common.util.ESequenceType;
 import io.corementor.finexp.inventory.common.util.SequenceNumberGeneratorUtil;

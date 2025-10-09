@@ -1,7 +1,6 @@
-package io.corementor.finexp.inventory.base;
+package io.corementor.finexp.base;
 
 
-import io.corementor.finexp.inventory.common.util.ELifeCycle;
 import io.corementor.finexp.inventory.common.util.ESequenceType;
 import lombok.AllArgsConstructor;
 import org.hibernate.ObjectNotFoundException;

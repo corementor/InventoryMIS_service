@@ -11,7 +11,7 @@ import psychemesh.framework.core.response.Response;
 import java.util.List;
 
 /**
- * The Class PurchaseOrderResource.
+ * The Class Purchase Order Resource.
  *
  * @author Blaise Mugisha
  * @version 1.0
