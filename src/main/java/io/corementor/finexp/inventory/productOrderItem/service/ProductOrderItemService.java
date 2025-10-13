@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
+import psychemesh.framework.common.util.EEntityLifeCycle;
 import psychemesh.framework.core.message.IUserMessage;
 import psychemesh.framework.core.response.Response;
 
@@ -64,7 +65,7 @@ public class ProductOrderItemService {
             Response<ProductTypeEntity> productTypeResponse = productTypeQueryService.findProductTypeById(
                     theProductOrderItem.getProductType().getId()
             );
-            if (productTypeResponse.getData() == null ) {
+            if (productTypeResponse.getData() == null) {
                 return new Response<>(null, IUserMessage.INFORMATION_NOT_FOUND);
             }
 
@@ -194,8 +195,8 @@ public class ProductOrderItemService {
                     .orElseThrow(() -> new ObjectNotFoundException(itemId, "Product order item not found"));
 
             UUID purchaseOrderId = existingItem.getPurchaseOrderEntity().getId();
-
-            productOrderItemRepository.delete(existingItem);
+            existingItem.setState(EEntityLifeCycle.INACTIVE);
+//            productOrderItemRepository.delete(existingItem);
 
             // Update purchase order total after deletion
             updatePurchaseOrderTotal(purchaseOrderId);

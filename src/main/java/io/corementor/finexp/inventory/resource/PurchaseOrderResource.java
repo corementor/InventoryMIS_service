@@ -1,14 +1,17 @@
 package io.corementor.finexp.inventory.resource;
 
+import io.corementor.finexp.inventory.productOrderItem.service.ProductOrderItemService;
 import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import io.corementor.finexp.inventory.purchaseOrder.service.PurchaseOrderQueryService;
 import io.corementor.finexp.inventory.purchaseOrder.service.PurchaseOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import psychemesh.framework.core.message.IUserMessage;
 import psychemesh.framework.core.response.Response;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The Class Purchase Order Resource.
@@ -32,6 +35,12 @@ public class PurchaseOrderResource {
     private final PurchaseOrderQueryService purchaseOrderQueryService;
 
     /**
+     * The product order item service
+     */
+
+    private final ProductOrderItemService productOrderItemService;
+
+    /**
      * Create purchase order
      *
      * @param purchaseOrderEntity the purchase order entity
@@ -45,6 +54,7 @@ public class PurchaseOrderResource {
 
     /**
      * Update purchase order
+     *
      * @param thePurchaseOrder the purchase order
      * @return response
      */
@@ -63,6 +73,36 @@ public class PurchaseOrderResource {
     @ResponseStatus(HttpStatus.OK)
     public Response<List<PurchaseOrderEntity>> findAllPurchaseOrders() {
         return purchaseOrderQueryService.findAllPurchaseOrders();
+    }
+
+    /**
+     * Delete purchase order item
+     *
+     * @param itemId the item ID
+     * @return response
+     */
+    @DeleteMapping("/delete/item/{itemId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<Boolean> deletePurchaseOrderItem(@PathVariable("itemId") UUID itemId) {
+        try {
+
+            return productOrderItemService.deleteProductOrderItem(itemId);
+        } catch (Exception e) {
+
+            return new Response<>(IUserMessage.ERROR);
+        }
+    }
+
+    /**
+     * Get purchase order by id
+     *
+     * @param theId The UUId
+     * @return response
+     */
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<PurchaseOrderEntity> getPurchaseOrderById(@PathVariable("id") UUID theId) {
+        return purchaseOrderQueryService.findPurchaseOrderById(theId);
     }
 
 }

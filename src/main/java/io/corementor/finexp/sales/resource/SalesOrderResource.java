@@ -50,7 +50,7 @@ public class SalesOrderResource {
      */
     @GetMapping("/search/criteria/all")
     @ResponseStatus(HttpStatus.OK)
-    public Response<List<SalesOrderEntity>> findAllPurchaseOrders() {
+    public Response<List<SalesOrderEntity>> findAllSalesOrders() {
         return salesOrderQueryService.findAllSalesOrders();
     }
     /**
@@ -60,7 +60,7 @@ public class SalesOrderResource {
      */
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public Response<SalesOrderEntity> updatePurchaseOrder(@RequestBody SalesOrderEntity theSalesOrder) {
-        return salesOrderService.updatePurchaseOrderWithItems(theSalesOrder);
+    public Response<SalesOrderEntity> updateSalesOrder(@RequestBody SalesOrderEntity theSalesOrder) {
+        return salesOrderService.updateSalesOrderWithItems(theSalesOrder);
     }
 }

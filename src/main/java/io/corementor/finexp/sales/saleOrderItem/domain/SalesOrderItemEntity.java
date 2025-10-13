@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 @Table(name = "sales_order_item", schema = "inventory")
 public class SalesOrderItemEntity extends AbstractBaseEntity {
     /**
-     * The productName.
+     * The product Name.
      */
     @Column(name = "product_name", nullable = true)
     private String productName;

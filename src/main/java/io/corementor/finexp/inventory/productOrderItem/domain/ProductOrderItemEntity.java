@@ -12,7 +12,7 @@ import psychemesh.framework.domain.AbstractBaseEntity;
 import java.math.BigDecimal;
 
 /**
- * The Class ProductOrderItemEntity.
+ * The Class Product Order ItemEntity.
  *
  * @author Blaise Mugisha
  * @version 1.0

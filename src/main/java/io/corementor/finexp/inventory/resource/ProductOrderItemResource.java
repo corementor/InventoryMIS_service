@@ -82,12 +82,12 @@ public class ProductOrderItemResource {
 
     /**
      * Update product order item resource .
-     * @param theProductOrderIteme the product order item
+     * @param theProductOrderItem the product order item
      * @return response
      */
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public Response<ProductOrderItemEntity> updateProductOrderItem(@RequestBody ProductOrderItemEntity theProductOrderIteme) {
-        return productOrderItemService.updateProductOrderItem(theProductOrderIteme);
+    public Response<ProductOrderItemEntity> updateProductOrderItem(@RequestBody ProductOrderItemEntity theProductOrderItem) {
+        return productOrderItemService.updateProductOrderItem(theProductOrderItem);
     }
 }

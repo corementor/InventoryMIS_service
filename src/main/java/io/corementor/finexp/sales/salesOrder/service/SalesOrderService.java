@@ -20,9 +20,9 @@ import psychemesh.framework.core.response.Response;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * The Class sale order service
@@ -47,7 +47,11 @@ public class SalesOrderService {
      */
     private final ISalesOrderRepository salesOrderRepository;
 
-
+    /**
+     * Create sales order
+     * @param theSalesOrderEntity the Sales order  entity
+     * @return response
+     */
     public Response<SalesOrderEntity> createSalesOrder(SalesOrderEntity theSalesOrderEntity) {
         log.info("CREATE SALES ODER METHOD REACHED");
         try {
@@ -57,7 +61,7 @@ public class SalesOrderService {
                     ESequenceType.SALES_ORDER, ESequencePrefix.SALES);
             theSalesOrderEntity.setSaleCode(salesOrderNumber);
 
-            if (theSalesOrderEntity.getSaleCode() == null) theSalesOrderEntity.setSaleDate(LocalDate.now());
+            if (theSalesOrderEntity.getSaleDate() == null) theSalesOrderEntity.setSaleDate(LocalDate.now());
 
             BigDecimal totalPrice = BigDecimal.ZERO;
 
@@ -77,15 +81,15 @@ public class SalesOrderService {
                     item.setSize(productType.getSize());
                     item.setSaleOrderEntity(theSalesOrderEntity);
 
-                    if (item.getUnitPrice() == null) {
-                        item.setUnitPrice(productType.getUnitPrice());
-                    }
+                    if (item.getUnitPrice() == null) item.setUnitPrice(productType.getSellUnitPrice());
 
                     if (item.getUnitPrice() == null || item.getQuantity() <= 0) {
                         throw new IllegalArgumentException("Invalid unit price or quantity for product: " + productType.getProductName());
                     }
                     BigDecimal itemTotalPrice = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-                    totalPrice = totalPrice.add(itemTotalPrice);
+                    item.setTotalPrice(itemTotalPrice); // Set individual item total
+                    totalPrice = totalPrice.add(itemTotalPrice); // Add to order total
+
                     item.setCreatedAt(LocalDateTime.now());
                 }
             }
@@ -103,18 +107,22 @@ public class SalesOrderService {
         }
 
     }
-
-    public Response<SalesOrderEntity> updatePurchaseOrderWithItems(SalesOrderEntity theSalesOrder) {
+    /**
+     * Create updatePurchaseOrderWithItems
+     * @param theSalesOrder the Sales order  entity
+     * @return response
+     */
+    public Response<SalesOrderEntity> updateSalesOrderWithItems(SalesOrderEntity theSalesOrder) {
         try {
             if (theSalesOrder == null || theSalesOrder.getId() == null) {
-                return new Response<>(null, IMessage.INVALID_INPUT);
+                return new Response<>( IMessage.INVALID_INPUT);
             }
 
             // Find existing purchase order with items
             SalesOrderEntity existingOrder = salesOrderRepository.findById(theSalesOrder.getId())
                     .orElse(null);
             if (existingOrder == null) {
-                return new Response<>(null, IUserMessage.INFORMATION_NOT_FOUND);
+                return new Response<>( IUserMessage.INFORMATION_NOT_FOUND);
             }
             if (theSalesOrder.getSaleDate() != null) {
                 existingOrder.setSaleDate(theSalesOrder.getSaleDate());
@@ -134,7 +142,7 @@ public class SalesOrderService {
 
             // Handle order items updates if provided
             if (theSalesOrder.getOrderItems() != null) {
-                updateOrderItems(existingOrder, theSalesOrder.getOrderItems());
+                updateOrderItemsProperly(existingOrder, theSalesOrder.getOrderItems());
 
                 // Recalculate total price based on updated items
                 BigDecimal newTotal = calculateTotalPrice(existingOrder);
@@ -156,20 +164,76 @@ public class SalesOrderService {
 
     }
 
-    private void updateOrderItems(SalesOrderEntity existingOrder, List<SalesOrderItemEntity> newItems) {
-        // Clear existing items and add new ones
-        existingOrder.getOrderItems().clear();
+    private void updateOrderItemsProperly(SalesOrderEntity existingOrder, List<SalesOrderItemEntity> newItems) {
+
+        Map<UUID, SalesOrderItemEntity> existingItemsMap = existingOrder.getOrderItems().stream()
+                .filter(item -> item.getId() != null)
+                .collect(Collectors.toMap(SalesOrderItemEntity::getId, Function.identity()));
+
+        List<SalesOrderItemEntity> itemsToKeep = new ArrayList<>();
+        BigDecimal totalPrice = BigDecimal.ZERO;
+
         for (SalesOrderItemEntity newItem : newItems) {
-            newItem.setSaleOrderEntity(existingOrder);
-            existingOrder.getOrderItems().add(newItem);
+            SalesOrderItemEntity itemToSave;
+
+            if (newItem.getId() != null && existingItemsMap.containsKey(newItem.getId())) {
+                // Update existing item
+                itemToSave = existingItemsMap.get(newItem.getId());
+                updateExistingItem(itemToSave, newItem);
+            } else {
+                // Create new item
+                itemToSave = createNewItem(existingOrder, newItem);
+            }
+
+            // Calculate item total
+            BigDecimal itemTotal = itemToSave.getUnitPrice()
+                    .multiply(BigDecimal.valueOf(itemToSave.getQuantity()));
+
+            itemToSave.setTotalPrice(itemTotal);
+            totalPrice = totalPrice.add(itemTotal);
+
+            itemsToKeep.add(itemToSave);
         }
+
+        // Set the updated items list
+        existingOrder.getOrderItems().clear();
+        existingOrder.getOrderItems().addAll(itemsToKeep);
+        existingOrder.setTotalPrice(totalPrice);
+    }
+
+    private void updateExistingItem(SalesOrderItemEntity existing, SalesOrderItemEntity newData) {
+        existing.setQuantity(newData.getQuantity());
+        existing.setUnitPrice(newData.getUnitPrice());
+        existing.setProductName(newData.getProductName());
+        existing.setSize(newData.getSize());
+        existing.setModifiedAt(LocalDateTime.now());
+
+        // Update product type if changed
+        if (newData.getProductType() != null && newData.getProductType().getId() != null) {
+            existing.setProductType(newData.getProductType());
+        }
+    }
+
+    private SalesOrderItemEntity createNewItem(SalesOrderEntity salesOrder, SalesOrderItemEntity newItem) {
+        SalesOrderItemEntity item = new SalesOrderItemEntity();
+        item.setQuantity(newItem.getQuantity());
+        item.setUnitPrice(newItem.getUnitPrice());
+//        item.setTaxAmount(newItem.getTaxAmount());
+        item.setProductName(newItem.getProductName());
+        item.setSize(newItem.getSize());
+        item.setProductType(newItem.getProductType());
+        item.setSaleOrderEntity(salesOrder);
+        item.setCreatedAt(LocalDateTime.now());
+        return item;
     }
 
     private BigDecimal calculateTotalPrice(SalesOrderEntity order) {
         return order.getOrderItems().stream()
-                .map(SalesOrderItemEntity::getTotalPrice)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .map(item -> {
+                    // Calculate item total: unitPrice * quantity
+                    return item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+                })
+                .reduce(BigDecimal.ZERO, BigDecimal::add); // Sum all item totals
     }
 
 }
