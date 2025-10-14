@@ -164,6 +164,11 @@ public class SalesOrderService {
 
     }
 
+    /**
+     * update order items properly
+     * @param existingOrder SalesOrderEntity
+     * @param newItems List<SalesOrderItemEntity>
+     */
     private void updateOrderItemsProperly(SalesOrderEntity existingOrder, List<SalesOrderItemEntity> newItems) {
 
         Map<UUID, SalesOrderItemEntity> existingItemsMap = existingOrder.getOrderItems().stream()
@@ -201,6 +206,12 @@ public class SalesOrderService {
         existingOrder.setTotalPrice(totalPrice);
     }
 
+    /**
+     * update existing item
+     * @param existing SalesOrderItemEntity
+     * @param newData SalesOrderItemEntity
+     */
+
     private void updateExistingItem(SalesOrderItemEntity existing, SalesOrderItemEntity newData) {
         existing.setQuantity(newData.getQuantity());
         existing.setUnitPrice(newData.getUnitPrice());
@@ -214,6 +225,12 @@ public class SalesOrderService {
         }
     }
 
+    /**
+     * create new item
+     * @param salesOrder SalesOrderEntity
+     * @param newItem SalesOrderItemEntity
+     * @return SalesOrderItemEntity
+     */
     private SalesOrderItemEntity createNewItem(SalesOrderEntity salesOrder, SalesOrderItemEntity newItem) {
         SalesOrderItemEntity item = new SalesOrderItemEntity();
         item.setQuantity(newItem.getQuantity());
@@ -227,6 +244,11 @@ public class SalesOrderService {
         return item;
     }
 
+    /**
+     * calculate total price
+     * @param order SalesOrderEntity
+     * @return BigDecimal
+     */
     private BigDecimal calculateTotalPrice(SalesOrderEntity order) {
         return order.getOrderItems().stream()
                 .map(item -> {

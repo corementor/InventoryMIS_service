@@ -279,6 +279,12 @@ public class PurchaseOrderService {
         return item;
     }
 
+    /**
+     * calculate total price
+     * @param order PurchaseOrderEntity
+     * @return BigDecimal
+     */
+
     private BigDecimal calculateTotalPrice(PurchaseOrderEntity order) {
         return order.getOrderItems().stream()
                 .map(item -> {
