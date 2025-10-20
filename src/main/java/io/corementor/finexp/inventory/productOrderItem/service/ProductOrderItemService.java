@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import psychemesh.framework.common.util.EEntityLifeCycle;
 import psychemesh.framework.core.message.IUserMessage;
 import psychemesh.framework.core.response.Response;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -186,29 +185,5 @@ public class ProductOrderItemService {
         }
     }
 
-    /**
-     * Delete product order item
-     */
-    public Response<Boolean> deleteProductOrderItem(UUID itemId) {
-        try {
-            ProductOrderItemEntity existingItem = productOrderItemRepository.findById(itemId)
-                    .orElseThrow(() -> new ObjectNotFoundException(itemId, "Product order item not found"));
 
-            UUID purchaseOrderId = existingItem.getPurchaseOrderEntity().getId();
-            existingItem.setState(EEntityLifeCycle.INACTIVE);
-//            productOrderItemRepository.delete(existingItem);
-
-            // Update purchase order total after deletion
-            updatePurchaseOrderTotal(purchaseOrderId);
-
-            return new Response<>(true, IUserMessage.INFORMATION_DELETED);
-
-        } catch (ObjectNotFoundException ex) {
-            log.error("Product order item not found: {}", ex.getMessage());
-            return new Response<>(false, IUserMessage.INFORMATION_NOT_FOUND);
-        } catch (Exception ex) {
-            log.error("Error deleting product order item: {}", ex.getMessage(), ex);
-            return new Response<>(false, IUserMessage.ENTITY_IS_NOT_UPDATEABLE);
-        }
-    }
 }

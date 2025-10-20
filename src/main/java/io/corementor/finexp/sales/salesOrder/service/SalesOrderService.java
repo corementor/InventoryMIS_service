@@ -14,6 +14,7 @@ import io.corementor.finexp.sales.salesOrder.repository.ISalesOrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import psychemesh.framework.common.util.EEntityLifeCycle;
 import psychemesh.framework.core.message.IUserMessage;
 import psychemesh.framework.core.response.Response;
 
@@ -49,6 +50,7 @@ public class SalesOrderService {
 
     /**
      * Create sales order
+     *
      * @param theSalesOrderEntity the Sales order  entity
      * @return response
      */
@@ -107,22 +109,24 @@ public class SalesOrderService {
         }
 
     }
+
     /**
      * Create updatePurchaseOrderWithItems
+     *
      * @param theSalesOrder the Sales order  entity
      * @return response
      */
     public Response<SalesOrderEntity> updateSalesOrderWithItems(SalesOrderEntity theSalesOrder) {
         try {
             if (theSalesOrder == null || theSalesOrder.getId() == null) {
-                return new Response<>( IMessage.INVALID_INPUT);
+                return new Response<>(IMessage.INVALID_INPUT);
             }
 
             // Find existing purchase order with items
             SalesOrderEntity existingOrder = salesOrderRepository.findById(theSalesOrder.getId())
                     .orElse(null);
             if (existingOrder == null) {
-                return new Response<>( IUserMessage.INFORMATION_NOT_FOUND);
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
             }
             if (theSalesOrder.getSaleDate() != null) {
                 existingOrder.setSaleDate(theSalesOrder.getSaleDate());
@@ -155,7 +159,6 @@ public class SalesOrderService {
             return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
 
 
-
         } catch (Exception ex) {
             log.error("Error updating sales order with items: {}", ex.getMessage(), ex);
             return new Response<>(null, IMessage.INFORMATION_NOT_UPDATED);
@@ -166,8 +169,9 @@ public class SalesOrderService {
 
     /**
      * update order items properly
+     *
      * @param existingOrder SalesOrderEntity
-     * @param newItems List<SalesOrderItemEntity>
+     * @param newItems      List<SalesOrderItemEntity>
      */
     private void updateOrderItemsProperly(SalesOrderEntity existingOrder, List<SalesOrderItemEntity> newItems) {
 
@@ -208,8 +212,9 @@ public class SalesOrderService {
 
     /**
      * update existing item
+     *
      * @param existing SalesOrderItemEntity
-     * @param newData SalesOrderItemEntity
+     * @param newData  SalesOrderItemEntity
      */
 
     private void updateExistingItem(SalesOrderItemEntity existing, SalesOrderItemEntity newData) {
@@ -227,8 +232,9 @@ public class SalesOrderService {
 
     /**
      * create new item
+     *
      * @param salesOrder SalesOrderEntity
-     * @param newItem SalesOrderItemEntity
+     * @param newItem    SalesOrderItemEntity
      * @return SalesOrderItemEntity
      */
     private SalesOrderItemEntity createNewItem(SalesOrderEntity salesOrder, SalesOrderItemEntity newItem) {
@@ -246,16 +252,66 @@ public class SalesOrderService {
 
     /**
      * calculate total price
+     *
      * @param order SalesOrderEntity
      * @return BigDecimal
      */
     private BigDecimal calculateTotalPrice(SalesOrderEntity order) {
         return order.getOrderItems().stream()
+                .filter(item -> item.getState() == null || !EEntityLifeCycle.INACTIVE.equals(item.getState()))
                 .map(item -> {
                     // Calculate item total: unitPrice * quantity
                     return item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
                 })
                 .reduce(BigDecimal.ZERO, BigDecimal::add); // Sum all item totals
+    }
+
+    /**
+     * Delete sales order item
+     *
+     * @param theId the UUID
+     * @return response
+     */
+    public Response<SalesOrderEntity> deleteSalesOrderItem(UUID theId) {
+        try {
+            if (theId == null) {
+                return new Response<>(IMessage.INVALID_INPUT);
+
+            }
+
+            Optional<SalesOrderEntity> optionalSalesOrder =
+                    salesOrderRepository.findSalesOrderByProductOrderItemEntity(theId);
+
+
+            if (optionalSalesOrder.isEmpty()) {
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
+            }
+
+            SalesOrderEntity order = optionalSalesOrder.get();
+
+            SalesOrderItemEntity targetItem = order.getOrderItems().stream()
+                    .filter(i-> theId.equals(i.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if(targetItem==null){
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
+            }
+            targetItem.setState(EEntityLifeCycle.INACTIVE);
+            targetItem.setModifiedAt(LocalDateTime.now());
+
+            BigDecimal newTotal=calculateTotalPrice(order);
+            order.setTotalPrice(newTotal);
+            order.setModifiedAt(LocalDateTime.now());
+
+            SalesOrderEntity saved=salesOrderRepository.save(order);
+            return new Response<>(saved,IMessage.INFORMATION_UPDATED);
+
+
+        } catch (Exception e) {
+            log.error("Error deleting sales order item: {}", e.getMessage(), e);
+            return new Response<>(IUserMessage.ERROR);
+        }
     }
 
 }

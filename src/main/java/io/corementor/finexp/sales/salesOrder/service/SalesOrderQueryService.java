@@ -49,7 +49,7 @@ public class SalesOrderQueryService {
      */
     public Response<List<SalesOrderEntity>> findAllSalesOrders() {
         List<SalesOrderEntity> purchaseOrderList = saleOrderRepository
-                .findAllByState(EEntityLifeCycle.ACTIVE);
+                .findAllActiveOrdersWithActiveItems(EEntityLifeCycle.ACTIVE);
 
         return new Response<>(purchaseOrderList, IUserMessage.INFORMATION_FOUND);
     }

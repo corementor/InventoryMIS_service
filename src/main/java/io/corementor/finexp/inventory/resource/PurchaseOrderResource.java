@@ -76,6 +76,18 @@ public class PurchaseOrderResource {
     }
 
     /**
+     * Delete purchase order
+     *
+     * @param thePurchaseOrder the purchase order entity
+     * @return response
+     */
+    @PostMapping("/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<PurchaseOrderEntity> deletePurchaseOrder(@RequestBody PurchaseOrderEntity thePurchaseOrder) {
+        return purchaseOrderService.deletePurchaseOrder(thePurchaseOrder);
+    }
+
+    /**
      * Delete purchase order item
      *
      * @param itemId the item ID
@@ -83,12 +95,10 @@ public class PurchaseOrderResource {
      */
     @DeleteMapping("/delete/item/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response<Boolean> deletePurchaseOrderItem(@PathVariable("itemId") UUID itemId) {
+    public Response<PurchaseOrderEntity> deletePurchaseOrderItem(@PathVariable("itemId") UUID itemId) {
         try {
-
-            return productOrderItemService.deleteProductOrderItem(itemId);
+            return purchaseOrderService.deletePurchaseOrderItem(itemId);
         } catch (Exception e) {
-
             return new Response<>(IUserMessage.ERROR);
         }
     }

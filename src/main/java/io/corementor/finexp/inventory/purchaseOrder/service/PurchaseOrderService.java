@@ -263,7 +263,7 @@ public class PurchaseOrderService {
      * Create new Item
      *
      * @param purchaseOrder the Purchase order Entity
-     * @param newItem the ProductOrder Item Entity
+     * @param newItem       the ProductOrder Item Entity
      * @return the ProductOrderItemEntity
      */
     private ProductOrderItemEntity createNewItem(PurchaseOrderEntity purchaseOrder, ProductOrderItemEntity newItem) {
@@ -281,12 +281,15 @@ public class PurchaseOrderService {
 
     /**
      * calculate total price
+     *
      * @param order PurchaseOrderEntity
      * @return BigDecimal
      */
 
+
     private BigDecimal calculateTotalPrice(PurchaseOrderEntity order) {
         return order.getOrderItems().stream()
+                .filter(item -> item.getState() == null || !EEntityLifeCycle.INACTIVE.equals(item.getState()))
                 .map(item -> {
                     BigDecimal itemTotal = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
                     BigDecimal itemTax = item.getTaxAmount() != null ? item.getTaxAmount() : BigDecimal.ZERO;
@@ -306,14 +309,59 @@ public class PurchaseOrderService {
             PurchaseOrderEntity existingOrder = purchaseOrderRepository.findById(thePurchaseOrder.getId())
                     .orElse(null);
             if (existingOrder == null) {
-                return new Response<>(null, IUserMessage.INFORMATION_NOT_FOUND);
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
             }
             thePurchaseOrder.setState(EEntityLifeCycle.INACTIVE);
-            purchaseOrderRepository.save(thePurchaseOrder);
+            PurchaseOrderEntity updatedOrder = purchaseOrderRepository.save(thePurchaseOrder);
 
-            return new Response<>();
+            return new Response<>(updatedOrder, IUserMessage.INFORMATION_DELETED);
         } catch (Exception e) {
             log.error("Error deleting purchase order {} ", e.getMessage());
+            return new Response<>(IUserMessage.ERROR);
+        }
+    }
+    /**
+     * Delete product order item
+     * @param theId the UUID
+     * @return response
+     */
+    public Response<PurchaseOrderEntity> deletePurchaseOrderItem(UUID theId) {
+        try {
+            if (theId == null) {
+                return new Response<>(IMessage.INVALID_INPUT);
+            }
+
+            Optional<PurchaseOrderEntity> optionalOrder =
+                    purchaseOrderRepository.findPurchaseOrderEntityByProductOrderItemEntity(theId);
+
+            if (optionalOrder.isEmpty()) {
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
+            }
+
+            PurchaseOrderEntity order = optionalOrder.get();
+
+            ProductOrderItemEntity targetItem = order.getOrderItems().stream()
+                    .filter(i -> theId.equals(i.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (targetItem == null) {
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
+            }
+
+
+            targetItem.setState(EEntityLifeCycle.INACTIVE);
+            targetItem.setModifiedAt(LocalDateTime.now());
+
+            BigDecimal newTotal = calculateTotalPrice(order);
+            order.setTotalPrice(newTotal);
+            order.setModifiedAt(LocalDateTime.now());
+
+            PurchaseOrderEntity saved = purchaseOrderRepository.save(order);
+            return new Response<>(saved, IUserMessage.INFORMATION_DELETED);
+
+        } catch (Exception e) {
+            log.error("Error deleting purchase order item {} ", e.getMessage());
             return new Response<>(IUserMessage.ERROR);
         }
     }

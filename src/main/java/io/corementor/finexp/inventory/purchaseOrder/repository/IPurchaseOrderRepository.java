@@ -1,15 +1,18 @@
 package io.corementor.finexp.inventory.purchaseOrder.repository;
 
- import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
+import io.corementor.finexp.inventory.productOrderItem.domain.ProductOrderItemEntity;
+import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import psychemesh.framework.common.util.EEntityLifeCycle;
 
 
 import java.util.List;
- import java.util.Optional;
- import java.util.UUID;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * The Interface IPurchaseOrder Repository
@@ -21,9 +24,22 @@ import java.util.List;
 @Repository
 public interface IPurchaseOrderRepository extends JpaRepository<PurchaseOrderEntity, UUID>, JpaSpecificationExecutor<PurchaseOrderEntity> {
 
+     List<PurchaseOrderEntity> findAllByState(EEntityLifeCycle state);
 
-    List<PurchaseOrderEntity> findAllByState(EEntityLifeCycle state);
+    @Query("""
+           SELECT DISTINCT po
+           FROM PurchaseOrderEntity po
+           LEFT JOIN FETCH po.orderItems poi
+           WHERE po.state = :state
+             AND (poi.state = :state OR poi IS NULL)
+           """)
+    List<PurchaseOrderEntity> findAllActiveOrdersWithActiveItems(@Param("state") EEntityLifeCycle state);
+
 
     Optional<PurchaseOrderEntity> findByPurchaseCode(String purchaseCode);
+
+
+    @Query("SELECT po FROM PurchaseOrderEntity po JOIN po.orderItems poi WHERE poi.id = :itemId")
+    Optional<PurchaseOrderEntity> findPurchaseOrderEntityByProductOrderItemEntity(@Param("itemId") UUID itemId);
 
 }

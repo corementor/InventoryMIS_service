@@ -49,8 +49,7 @@ public class PurchaseOrderQueryService {
      */
     public Response<List<PurchaseOrderEntity>> findAllPurchaseOrders() {
         List<PurchaseOrderEntity> purchaseOrderList = purchaseOrderRepository
-                .findAllByState(EEntityLifeCycle.ACTIVE);
-
+                .findAllActiveOrdersWithActiveItems(EEntityLifeCycle.ACTIVE);
         return new Response<>(purchaseOrderList, IUserMessage.INFORMATION_FOUND);
     }
 }

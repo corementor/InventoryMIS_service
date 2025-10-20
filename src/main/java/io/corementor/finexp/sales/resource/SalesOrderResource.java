@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import psychemesh.framework.core.response.Response;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The Class Sales Order Resource.
@@ -31,6 +32,7 @@ public class SalesOrderResource {
      * The sales Order Query service
      */
     private final SalesOrderQueryService salesOrderQueryService;
+
     /**
      * Create sales order
      *
@@ -53,8 +55,10 @@ public class SalesOrderResource {
     public Response<List<SalesOrderEntity>> findAllSalesOrders() {
         return salesOrderQueryService.findAllSalesOrders();
     }
+
     /**
      * Update sales order
+     *
      * @param theSalesOrder the sales order
      * @return response
      */
@@ -62,5 +66,16 @@ public class SalesOrderResource {
     @ResponseStatus(HttpStatus.OK)
     public Response<SalesOrderEntity> updateSalesOrder(@RequestBody SalesOrderEntity theSalesOrder) {
         return salesOrderService.updateSalesOrderWithItems(theSalesOrder);
+    }
+
+    /**
+     * Delete sales order item
+     * @param itemId the UUID
+     * @return response
+     */
+    @DeleteMapping("/delete/item/{itemId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<SalesOrderEntity> deleteSalesOrderItem(@PathVariable UUID itemId) {
+        return salesOrderService.deleteSalesOrderItem(itemId);
     }
 }
