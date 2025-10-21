@@ -23,9 +23,18 @@ import java.util.UUID;
 
 @Repository
 public interface IPurchaseOrderRepository extends JpaRepository<PurchaseOrderEntity, UUID>, JpaSpecificationExecutor<PurchaseOrderEntity> {
-
+    /**
+     * Find all by state
+     * @param state the EEntityLifeCycle
+     * @return List of Purchase order entity
+     */
      List<PurchaseOrderEntity> findAllByState(EEntityLifeCycle state);
 
+    /**
+     * Find all active orders with active items
+     * @param state EEntityLifeCycle
+     * @return List of Purchase order entity
+     */
     @Query("""
            SELECT DISTINCT po
            FROM PurchaseOrderEntity po
@@ -35,11 +44,21 @@ public interface IPurchaseOrderRepository extends JpaRepository<PurchaseOrderEnt
            """)
     List<PurchaseOrderEntity> findAllActiveOrdersWithActiveItems(@Param("state") EEntityLifeCycle state);
 
+    /**
+     * Find purchase orders by purchase code
+     * @param purchaseCode the purchase code
+     * @return response
+     */
 
     Optional<PurchaseOrderEntity> findByPurchaseCode(String purchaseCode);
 
+    /**
+     * Find purchase orders by product order item entity
+     * @param itemId the UUID
+     * @return Optional value of Purchase order entity
+     */
 
-    @Query("SELECT po FROM PurchaseOrderEntity po JOIN po.orderItems poi WHERE poi.id = :itemId")
+    @Query("SELECT po FROM PurchaseOrderEntity po JOIN po.orderItems poi WHERE poi.id=:itemId")
     Optional<PurchaseOrderEntity> findPurchaseOrderEntityByProductOrderItemEntity(@Param("itemId") UUID itemId);
 
 }

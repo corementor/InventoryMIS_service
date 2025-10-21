@@ -125,9 +125,11 @@ public class SalesOrderService {
             // Find existing purchase order with items
             SalesOrderEntity existingOrder = salesOrderRepository.findById(theSalesOrder.getId())
                     .orElse(null);
+
             if (existingOrder == null) {
                 return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
             }
+
             if (theSalesOrder.getSaleDate() != null) {
                 existingOrder.setSaleDate(theSalesOrder.getSaleDate());
             }
@@ -241,7 +243,6 @@ public class SalesOrderService {
         SalesOrderItemEntity item = new SalesOrderItemEntity();
         item.setQuantity(newItem.getQuantity());
         item.setUnitPrice(newItem.getUnitPrice());
-//        item.setTaxAmount(newItem.getTaxAmount());
         item.setProductName(newItem.getProductName());
         item.setSize(newItem.getSize());
         item.setProductType(newItem.getProductType());
@@ -297,6 +298,7 @@ public class SalesOrderService {
             if(targetItem==null){
                 return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
             }
+
             targetItem.setState(EEntityLifeCycle.INACTIVE);
             targetItem.setModifiedAt(LocalDateTime.now());
 

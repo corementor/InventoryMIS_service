@@ -219,20 +219,22 @@ public class PurchaseOrderService {
                 itemToSave = createNewItem(existingOrder, newItem);
             }
 
-            // Calculate item total
             BigDecimal itemTotal = itemToSave.getUnitPrice()
-                    .multiply(BigDecimal.valueOf
-                            (itemToSave.getQuantity()));
-            BigDecimal itemTax = itemToSave.getTaxAmount() != null ? itemToSave.getTaxAmount() : BigDecimal.ZERO;
+                    .multiply(BigDecimal.valueOf(itemToSave.getQuantity()));
+
+            BigDecimal itemTax = itemToSave.getTaxAmount() != null ?
+                    itemToSave.getTaxAmount().multiply(BigDecimal.valueOf(itemToSave.getQuantity())) :
+                    BigDecimal.ZERO;
+
             BigDecimal itemTotalWithTax = itemTotal.add(itemTax);
 
             itemToSave.setTotalTax(itemTax);
             itemToSave.setTotalPriceWithTax(itemTotalWithTax);
+
             totalPrice = totalPrice.add(itemTotalWithTax);
 
             itemsToKeep.add(itemToSave);
         }
-
         // Set the updated items list
         existingOrder.getOrderItems().clear();
         existingOrder.getOrderItems().addAll(itemsToKeep);
@@ -286,13 +288,12 @@ public class PurchaseOrderService {
      * @return BigDecimal
      */
 
-
     private BigDecimal calculateTotalPrice(PurchaseOrderEntity order) {
         return order.getOrderItems().stream()
                 .filter(item -> item.getState() == null || !EEntityLifeCycle.INACTIVE.equals(item.getState()))
                 .map(item -> {
                     BigDecimal itemTotal = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-                    BigDecimal itemTax = item.getTaxAmount() != null ? item.getTaxAmount() : BigDecimal.ZERO;
+                    BigDecimal itemTax = item.getTaxAmount() != null ? item.getTaxAmount().multiply(BigDecimal.valueOf(item.getQuantity())) : BigDecimal.ZERO;
                     return itemTotal.add(itemTax);
                 })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -320,8 +321,10 @@ public class PurchaseOrderService {
             return new Response<>(IUserMessage.ERROR);
         }
     }
+
     /**
      * Delete product order item
+     *
      * @param theId the UUID
      * @return response
      */
