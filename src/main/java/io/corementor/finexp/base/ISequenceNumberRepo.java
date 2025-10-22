@@ -11,7 +11,7 @@ import java.util.UUID;
 /**
  * The Interface ISequenceNumberRepo.
  *
- * @author Jeremie Ukundwa Tuyisenge
+ * @author Blaise Mugisha
  * @version 1.0
  */
 

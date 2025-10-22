@@ -15,9 +15,9 @@ import psychemesh.framework.domain.AbstractBaseEntity;
 import java.time.LocalDateTime;
 
 /**
- * The Class Certificate.
+ * The Class SequenceNumber.
  *
- * @author Jeremie Ukundwa Tuyisenge
+ * @author Blaise Mugisha.
  * @version 1.0
  */
 

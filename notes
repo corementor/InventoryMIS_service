@@ -1,0 +1,35 @@
+1.Product type code format PT001 OK
+2.Purchase code format PO2025-034 OK
+3.Sales code format SO2025-034 OK
+3.In one purchase order you can not have similar product types
+4.Subtotal -> Total Tax Exclusive
+5.Total -> Total Tax Inclusive
+
+PURCHASE ORDER
+--------------
+
+STATUS: CREATED,SUBMITTED,APPROVED,RETURNED
+
+USERS: ADMIN, MANAGER, SALES_OFFICER, STOCK_OFFICER
+
+Edit and delete is possible only when order is created or returned by officers
+
+
+PurchaseOrderHistory
+{
+  purchaseOrderId: reference to purchase order
+  creationDate: LocalDateTime
+  state: PurchaseOrderState[CREATED, RETURNED, SUBMITTED, APPROVED]
+  user_id: username of who did the action
+  comments: String
+
+}
+
+PurchaseOrder{
+  state: PurchaseOrderState[CREATED, RETURNED, SUBMITTED, APPROVED]
+
+}
+
+ADMIN
+
+

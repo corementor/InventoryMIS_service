@@ -75,10 +75,12 @@ public class PurchaseOrderService {
 
             if (thePurchaseOrderEntity.getOrderItems() != null && !thePurchaseOrderEntity.getOrderItems().isEmpty()) {
                 for (ProductOrderItemEntity item : thePurchaseOrderEntity.getOrderItems()) {
-                    // Validate product type exists
+
                     if (item.getProductType() == null || item.getProductType().getId() == null) {
                         throw new IllegalArgumentException("Product type ID is required for order items");
                     }
+
+
 
                     Response<ProductTypeEntity> productTypeResponse = productTypeQueryService.findProductTypeById(item.getProductType().getId());
                     if (productTypeResponse.getData() == null) {
