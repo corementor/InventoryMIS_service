@@ -10,7 +10,7 @@ import psychemesh.framework.common.util.EEntityLifeCycle;
 /**
  * The Interface SequenceNumberService.
  *
- * @author Jeremie Ukundwa Tuyisenge
+ * @author Blaise Mugisha.
  * @version 1.0
  */
 

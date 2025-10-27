@@ -26,4 +26,5 @@ public interface IMessage {
     /** The constant INFORMATION_NOT_UPDATED. */
     int INFORMATION_NOT_UPDATED = 1005;
     int INVALID_INPUT=1006;
+    int DUPLICATE_PRODUCT_TYPES=1007;
 }

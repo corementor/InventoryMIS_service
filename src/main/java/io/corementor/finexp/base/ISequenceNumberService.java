@@ -6,7 +6,7 @@ import io.corementor.finexp.inventory.common.util.ESequenceType;
 /**
  * The Interface ISequenceNumberService.
  *
- * @author Blaise Mugisha
+ * @author Blaise Mugisha.
  * @version 1.0
  */
 

@@ -55,7 +55,6 @@ public class PurchaseOrderService {
      * Create purchase order with items
      */
     public Response<PurchaseOrderEntity> createPurchaseOrder(PurchaseOrderEntity thePurchaseOrderEntity) {
-        log.info("CREATE PURCHASE ODER METHOD REACHED");
         try {
             if (thePurchaseOrderEntity == null) {
                 return new Response<>(IMessage.INVALID_INPUT);
@@ -68,6 +67,14 @@ public class PurchaseOrderService {
 
             if (thePurchaseOrderEntity.getPurchaseDate() == null) {
                 thePurchaseOrderEntity.setPurchaseDate(LocalDate.now());
+            }
+
+
+            if (thePurchaseOrderEntity.getOrderItems() != null && !thePurchaseOrderEntity.getOrderItems().isEmpty()) {
+                Response<Boolean> duplicateCheck = checkForDuplicateProductTypes(thePurchaseOrderEntity.getOrderItems());
+                if (duplicateCheck.getMessage() != null) {
+                    return new Response<>(duplicateCheck.getMessage());
+                }
             }
 
             // Calculate total price and prepare items
@@ -171,6 +178,14 @@ public class PurchaseOrderService {
                     return new Response<>(IUserMessage.ENTRY_ALREADY_EXISTS);
                 }
                 existingOrder.setPurchaseCode(thePurchaseOrderEntity.getPurchaseCode());
+            }
+
+            // Validate no duplicate product types BEFORE processing
+            if (thePurchaseOrderEntity.getOrderItems() != null && !thePurchaseOrderEntity.getOrderItems().isEmpty()) {
+                Response<Boolean> duplicateCheck = checkForDuplicateProductTypes(thePurchaseOrderEntity.getOrderItems());
+                if (duplicateCheck.getMessage() != null) {
+                    return new Response<>(duplicateCheck.getMessage());
+                }
             }
 
             // Handle order items updates if provided
@@ -370,4 +385,47 @@ public class PurchaseOrderService {
             return new Response<>(IUserMessage.ERROR);
         }
     }
+
+
+    /**
+     * Check for duplicate product types in order items
+     * @param orderItems the list of order items
+     * @return  response
+     */
+    private Response<Boolean> checkForDuplicateProductTypes(List<ProductOrderItemEntity> orderItems) {
+        if (orderItems == null || orderItems.isEmpty()) {
+            return new Response<>(true);
+        }
+
+        // Track seen product type IDs
+        Set<UUID> seenProductTypeIds = new HashSet<>();
+        Set<String> duplicateProductNames = new HashSet<>();
+
+        for (ProductOrderItemEntity item : orderItems) {
+            if (item.getProductType() != null && item.getProductType().getId() != null) {
+                UUID productTypeId = item.getProductType().getId();
+
+                if (seenProductTypeIds.contains(productTypeId)) {
+                    // Found duplicate - get product name for error message
+                    String productName = item.getProductName();
+                    if (productName == null && item.getProductType() != null) {
+                        Response<ProductTypeEntity> productTypeResponse = productTypeQueryService.findProductTypeById(productTypeId);
+                        if (productTypeResponse.getData() != null) {
+                            productName = productTypeResponse.getData().getProductName();
+                        }
+                    }
+                    duplicateProductNames.add(productName != null ? productName : "Unknown Product");
+                } else {
+                    seenProductTypeIds.add(productTypeId);
+                }
+            }
+        }
+
+        if (!duplicateProductNames.isEmpty()) {
+            return new Response<>(IUserMessage.ENTRY_ALREADY_EXISTS);
+        }
+
+        return new Response<>(true);
+    }
+
 }

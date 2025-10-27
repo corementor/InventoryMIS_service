@@ -3,7 +3,7 @@ package io.corementor.finexp.inventory.common.util;
 /**
  * The enum ESequenceType.
  *
- * @author Jeremie Ukundwa Tuyisenge
+ * @author Blaise Mugisha.
  * @version 1.0
  */
 
