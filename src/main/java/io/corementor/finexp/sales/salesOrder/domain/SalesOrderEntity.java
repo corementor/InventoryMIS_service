@@ -1,7 +1,6 @@
 package io.corementor.finexp.sales.salesOrder.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import io.corementor.finexp.sales.saleOrderItem.domain.SalesOrderItemEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

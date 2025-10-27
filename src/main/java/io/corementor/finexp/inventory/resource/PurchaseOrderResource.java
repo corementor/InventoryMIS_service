@@ -1,6 +1,5 @@
 package io.corementor.finexp.inventory.resource;
 
-import io.corementor.finexp.inventory.productOrderItem.service.ProductOrderItemService;
 import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import io.corementor.finexp.inventory.purchaseOrder.service.PurchaseOrderQueryService;
 import io.corementor.finexp.inventory.purchaseOrder.service.PurchaseOrderService;
@@ -19,7 +18,7 @@ import java.util.UUID;
  * @author Blaise Mugisha
  * @version 1.0
  */
-@CrossOrigin("*")
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/purchaseOrder")
@@ -34,11 +33,6 @@ public class PurchaseOrderResource {
      */
     private final PurchaseOrderQueryService purchaseOrderQueryService;
 
-    /**
-     * The product order item service
-     */
-
-    private final ProductOrderItemService productOrderItemService;
 
     /**
      * Create purchase order

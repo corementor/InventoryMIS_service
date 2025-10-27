@@ -17,7 +17,6 @@ import java.util.UUID;
  * @author Blaise Mugisha
  * @version 1.0
  */
-@CrossOrigin("*")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/productType")

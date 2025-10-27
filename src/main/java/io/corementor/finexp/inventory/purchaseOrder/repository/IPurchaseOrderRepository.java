@@ -1,6 +1,5 @@
 package io.corementor.finexp.inventory.purchaseOrder.repository;
 
-import io.corementor.finexp.inventory.productOrderItem.domain.ProductOrderItemEntity;
 import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

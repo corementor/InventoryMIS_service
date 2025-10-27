@@ -1,9 +1,8 @@
-package io.corementor.finexp.inventory.productOrderItem.domain;
+package io.corementor.finexp.inventory.purchaseOrder.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.corementor.finexp.inventory.productType.domain.ProductTypeEntity;
-import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
