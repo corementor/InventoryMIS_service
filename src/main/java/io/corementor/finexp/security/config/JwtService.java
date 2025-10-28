@@ -17,6 +17,11 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * The Jwt service class
+ * @author Blaise Mugisha
+ * @version 1.0
+ */
 @Service
 public class JwtService {
     @Value("${security.jwt.secret-key}")
@@ -82,7 +87,12 @@ public class JwtService {
     }
 
     private SecretKey getSignInKey() {
+
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+
+        System.out.println("Secret key length: " + SECRET_KEY.length());
+        System.out.println("Decoded key bytes length: " + keyBytes.length);
+
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

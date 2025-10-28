@@ -48,14 +48,14 @@ public class AuthenticationService {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
+                            request.getEmail(),
                             request.getPassword()
                     )
             );
 
 
 
-            UserEntity user = userRepository.findUserEntityByEmail(request.getUsername())
+            UserEntity user = userRepository.findUserEntityByEmail(request.getEmail())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
 
