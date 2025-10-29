@@ -1,5 +1,6 @@
 package io.corementor.finexp.inventory.resource;
 
+import io.corementor.finexp.common.RequestDto;
 import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import io.corementor.finexp.inventory.purchaseOrder.service.PurchaseOrderQueryService;
 import io.corementor.finexp.inventory.purchaseOrder.service.PurchaseOrderService;
@@ -108,5 +109,43 @@ public class PurchaseOrderResource {
     public Response<PurchaseOrderEntity> getPurchaseOrderById(@PathVariable("id") UUID theId) {
         return purchaseOrderQueryService.findPurchaseOrderById(theId);
     }
+
+
+    /**
+     * Submit for approval
+     *
+     * @param requestDto the RequestDto
+     * @return response
+     */
+    @PostMapping("/submitForApproval")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<PurchaseOrderEntity> submitForApproval(@RequestBody RequestDto requestDto) {
+        return purchaseOrderService.submitForApproval(requestDto);
+    }
+
+    /**
+     * Approve Purchase Order
+     *
+     * @param requestDto the RequestDto
+     * @return response
+     */
+    @PostMapping("/approveOrder")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<PurchaseOrderEntity> approvePurchaseOrder(@RequestBody RequestDto requestDto) {
+        return purchaseOrderService.approvePurchaseOrder(requestDto);
+    }
+
+    /**
+     * Return Purchase Order
+     *
+     * @param requestDto the RequestDto
+     * @return response
+     */
+    @PostMapping("/returnOrder")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<PurchaseOrderEntity> returnPurchaseOrder(@RequestBody RequestDto requestDto) {
+        return purchaseOrderService.returnPurchaseOrder(requestDto);
+    }
+
 
 }

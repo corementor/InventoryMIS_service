@@ -1,5 +1,5 @@
 package io.corementor.finexp.base;
-import io.corementor.finexp.inventory.common.util.ELifeCycle;
+import io.corementor.finexp.common.ELifeCycle;
 
 
 

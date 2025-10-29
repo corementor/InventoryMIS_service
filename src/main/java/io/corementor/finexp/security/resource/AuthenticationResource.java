@@ -1,8 +1,8 @@
 package io.corementor.finexp.security.resource;
 
-import io.corementor.finexp.inventory.common.util.AuthResponse;
-import io.corementor.finexp.inventory.common.util.LoginDto;
-import io.corementor.finexp.inventory.common.util.RefreshTokenRequest;
+import io.corementor.finexp.common.AuthResponse;
+import io.corementor.finexp.common.LoginDto;
+import io.corementor.finexp.common.RefreshTokenRequest;
 import io.corementor.finexp.security.config.JwtService;
 import io.corementor.finexp.security.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import psychemesh.framework.core.response.Response;
 
 /**
  * The class Authentication Resource.

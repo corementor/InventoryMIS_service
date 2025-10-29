@@ -1,8 +1,8 @@
 package io.corementor.finexp.security.service;
 
-import io.corementor.finexp.inventory.common.util.AuthResponse;
-import io.corementor.finexp.inventory.common.util.LoginDto;
-import io.corementor.finexp.inventory.common.util.RefreshTokenRequest;
+import io.corementor.finexp.common.AuthResponse;
+import io.corementor.finexp.common.LoginDto;
+import io.corementor.finexp.common.RefreshTokenRequest;
 import io.corementor.finexp.security.config.JwtService;
 import io.corementor.finexp.security.config.MyUserDetailService;
 import io.corementor.finexp.security.domain.RoleEntity;
@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**

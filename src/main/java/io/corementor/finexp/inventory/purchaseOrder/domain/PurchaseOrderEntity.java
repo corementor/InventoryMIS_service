@@ -1,8 +1,9 @@
 package io.corementor.finexp.inventory.purchaseOrder.domain;
 
 
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.corementor.finexp.common.EPurchaseOrderHistoryStatus;
+import io.corementor.finexp.inventory.purchaseOrderHistory.domain.PurchaseOrderHistoryEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +20,8 @@ import java.util.List;
  * @author Blaise Mugisha
  * @version 1.0
  */
-@Getter@Setter
+@Getter
+@Setter
 @Entity
 @Table(name = "inv_purchase_order", schema = "inventory")
 public class PurchaseOrderEntity extends AbstractBaseEntity {
@@ -42,4 +44,11 @@ public class PurchaseOrderEntity extends AbstractBaseEntity {
     @OneToMany(mappedBy = "purchaseOrderEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<ProductOrderItemEntity> orderItems = new ArrayList<>();
+
+    /**
+     * The order history status
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "order_history_status")
+    private EPurchaseOrderHistoryStatus status;
 }

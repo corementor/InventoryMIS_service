@@ -2,14 +2,13 @@ package io.corementor.finexp.inventory.purchaseOrder.service;
 
 
 import io.corementor.finexp.base.IMessage;
-import io.corementor.finexp.inventory.common.util.ESequencePrefix;
-import io.corementor.finexp.inventory.common.util.ESequenceType;
-import io.corementor.finexp.inventory.common.util.SequenceNumberGeneratorUtil;
+import io.corementor.finexp.common.*;
 import io.corementor.finexp.inventory.purchaseOrder.domain.ProductOrderItemEntity;
 import io.corementor.finexp.inventory.productType.domain.ProductTypeEntity;
 import io.corementor.finexp.inventory.productType.service.ProductTypeQueryService;
 import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import io.corementor.finexp.inventory.purchaseOrder.repository.IPurchaseOrderRepository;
+import io.corementor.finexp.inventory.purchaseOrderHistory.service.PurchaseOrderHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * The Class PurchaseOrderService.
+ * The Class Purchase Order Service.
  *
  * @author Blaise Mugisha
  * @version 1.0
@@ -47,6 +46,11 @@ public class PurchaseOrderService {
      */
     private final ProductTypeQueryService productTypeQueryService;
 
+    /**
+     * The Purchase order history service
+     */
+
+    private final PurchaseOrderHistoryService purchaseOrderHistoryService;
 
     /**
      * Create purchase order with items
@@ -83,7 +87,6 @@ public class PurchaseOrderService {
                     if (item.getProductType() == null || item.getProductType().getId() == null) {
                         throw new IllegalArgumentException("Product type ID is required for order items");
                     }
-
 
 
                     Response<ProductTypeEntity> productTypeResponse = productTypeQueryService.findProductTypeById(item.getProductType().getId());
@@ -126,9 +129,12 @@ public class PurchaseOrderService {
             thePurchaseOrderEntity.setTotalPrice(totalPrice);
             thePurchaseOrderEntity.setCreatedAt(LocalDateTime.now());
             thePurchaseOrderEntity.setModifiedAt(LocalDateTime.now());
+            thePurchaseOrderEntity.setStatus(EPurchaseOrderHistoryStatus.CREATED);
 
-            // Save everything in one transaction (cascade will save items)
+
             PurchaseOrderEntity savedOrder = purchaseOrderRepository.save(thePurchaseOrderEntity);
+
+            purchaseOrderHistoryService.createPurchaseOrderHistory(savedOrder, "INITIAL PURCHASE ORDER HISTORY");
 
             return new Response<>(savedOrder, IMessage.INFORMATION_SAVED);
 
@@ -249,7 +255,7 @@ public class PurchaseOrderService {
 
             itemsToKeep.add(itemToSave);
         }
-        // Set the updated items list
+
         existingOrder.getOrderItems().clear();
         existingOrder.getOrderItems().addAll(itemsToKeep);
         existingOrder.setTotalPrice(totalPrice);
@@ -269,7 +275,7 @@ public class PurchaseOrderService {
         existing.setSize(newData.getSize());
         existing.setModifiedAt(LocalDateTime.now());
 
-        // Update product type if changed
+
         if (newData.getProductType() != null && newData.getProductType().getId() != null) {
             existing.setProductType(newData.getProductType());
         }
@@ -386,15 +392,16 @@ public class PurchaseOrderService {
 
     /**
      * Check for duplicate product types in order items
+     *
      * @param orderItems the list of order items
-     * @return  response
+     * @return response
      */
     private Response<Boolean> checkForDuplicateProductTypes(List<ProductOrderItemEntity> orderItems) {
         if (orderItems == null || orderItems.isEmpty()) {
             return new Response<>(true);
         }
 
-        // Track seen product type IDs
+
         Set<UUID> seenProductTypeIds = new HashSet<>();
         Set<String> duplicateProductNames = new HashSet<>();
 
@@ -403,7 +410,7 @@ public class PurchaseOrderService {
                 UUID productTypeId = item.getProductType().getId();
 
                 if (seenProductTypeIds.contains(productTypeId)) {
-                    // Found duplicate - get product name for error message
+
                     String productName = item.getProductName();
                     if (productName == null && item.getProductType() != null) {
                         Response<ProductTypeEntity> productTypeResponse = productTypeQueryService.findProductTypeById(productTypeId);
@@ -423,6 +430,121 @@ public class PurchaseOrderService {
         }
 
         return new Response<>(true);
+    }
+
+
+    /**
+     * Submit for Approval
+     *
+     * @param requestDto the Request dto
+     * @return response
+     */
+    public Response<PurchaseOrderEntity> submitForApproval(RequestDto requestDto) {
+        try {
+            PurchaseOrderEntity existingOrder = purchaseOrderRepository.findById(requestDto.getId())
+                    .orElse(null);
+            if (existingOrder == null) {
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
+            }
+
+            if (existingOrder.getStatus() != EPurchaseOrderHistoryStatus.CREATED &&
+                    existingOrder.getStatus() != EPurchaseOrderHistoryStatus.RETURNED) {
+                return new Response<>("Cannot submit order. Current status: " + existingOrder.getStatus());
+            }
+
+
+            existingOrder.setStatus(EPurchaseOrderHistoryStatus.SUBMITTED);
+            existingOrder.setModifiedAt(LocalDateTime.now());
+            PurchaseOrderEntity updatedOrder = purchaseOrderRepository.save(existingOrder);
+
+
+            purchaseOrderHistoryService.createPurchaseOrderHistory(updatedOrder, requestDto.getComment());
+
+            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+
+        } catch (Exception ex) {
+            log.error("Error submitting purchase order for approval: {}", ex.getMessage(), ex);
+            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
+        }
+    }
+
+    /**
+     * Approve PurchaseOrder
+     *
+     * @param requestDto the RequestDto
+     * @return response
+     */
+    public Response<PurchaseOrderEntity> approvePurchaseOrder(RequestDto requestDto) {
+        try {
+            PurchaseOrderEntity existingOrder = purchaseOrderRepository.findById(requestDto.getId())
+                    .orElse(null);
+            if (existingOrder == null) {
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
+            }
+
+
+            if (existingOrder.getStatus() != EPurchaseOrderHistoryStatus.SUBMITTED) {
+                return new Response<>("Cannot approve order. Current status: " + existingOrder.getStatus());
+            }
+
+
+            existingOrder.setStatus(EPurchaseOrderHistoryStatus.APPROVED);
+            existingOrder.setModifiedAt(LocalDateTime.now());
+            PurchaseOrderEntity updatedOrder = purchaseOrderRepository.save(existingOrder);
+
+
+            String comment = "Order approved by manager";
+            if (requestDto.getComment() != null && !requestDto.getComment().trim().isEmpty()) {
+                comment += ". Comment: " + requestDto.getComment();
+            }
+            purchaseOrderHistoryService.createPurchaseOrderHistory(updatedOrder, comment);
+
+            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+
+        } catch (Exception ex) {
+            log.error("Error approving purchase order: {}", ex.getMessage(), ex);
+            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
+        }
+    }
+
+    /**
+     * Return PurchaseOrder
+     *
+     * @param requestDto the RequestDto
+     * @return response
+     */
+    public Response<PurchaseOrderEntity> returnPurchaseOrder(RequestDto requestDto) {
+        try {
+            PurchaseOrderEntity existingOrder = purchaseOrderRepository.findById(requestDto.getId())
+                    .orElse(null);
+            if (existingOrder == null) {
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
+            }
+
+
+            if (existingOrder.getStatus() != EPurchaseOrderHistoryStatus.SUBMITTED) {
+                return new Response<>("Cannot return order. Current status: " + existingOrder.getStatus());
+            }
+
+            if (requestDto.getComment() == null || requestDto.getComment().trim().isEmpty()) {
+                return new Response<>("Return reason is required");
+            }
+
+
+            existingOrder.setStatus(EPurchaseOrderHistoryStatus.RETURNED);
+            existingOrder.setModifiedAt(LocalDateTime.now());
+            PurchaseOrderEntity updatedOrder = purchaseOrderRepository.save(existingOrder);
+
+
+            purchaseOrderHistoryService.createPurchaseOrderHistory(updatedOrder,
+                    "Order returned by manager. Reason: " + requestDto.getComment());
+
+            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+
+        } catch (Exception ex) {
+            log.error("Error returning purchase order: {}", ex.getMessage(), ex);
+            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
+        }
     }
 
 }

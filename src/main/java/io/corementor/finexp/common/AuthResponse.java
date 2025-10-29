@@ -1,4 +1,4 @@
-package io.corementor.finexp.inventory.common.util;
+package io.corementor.finexp.common;
 
 
 import lombok.AllArgsConstructor;
@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 /**
  * The AuthResponse class.

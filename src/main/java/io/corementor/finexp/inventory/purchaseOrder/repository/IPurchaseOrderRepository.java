@@ -22,12 +22,6 @@ import java.util.UUID;
 
 @Repository
 public interface IPurchaseOrderRepository extends JpaRepository<PurchaseOrderEntity, UUID>, JpaSpecificationExecutor<PurchaseOrderEntity> {
-    /**
-     * Find all by state
-     * @param state the EEntityLifeCycle
-     * @return List of Purchase order entity
-     */
-     List<PurchaseOrderEntity> findAllByState(EEntityLifeCycle state);
 
     /**
      * Find all active orders with active items

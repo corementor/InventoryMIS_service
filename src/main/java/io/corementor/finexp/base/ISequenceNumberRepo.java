@@ -1,7 +1,7 @@
 package io.corementor.finexp.base;
 
 
-import io.corementor.finexp.inventory.common.util.ESequenceType;
+import io.corementor.finexp.common.ESequenceType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

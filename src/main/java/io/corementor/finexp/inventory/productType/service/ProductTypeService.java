@@ -2,9 +2,9 @@ package io.corementor.finexp.inventory.productType.service;
 
 
 import io.corementor.finexp.base.IMessage;
-import io.corementor.finexp.inventory.common.util.ESequencePrefix;
-import io.corementor.finexp.inventory.common.util.ESequenceType;
-import io.corementor.finexp.inventory.common.util.SequenceNumberGeneratorUtil;
+import io.corementor.finexp.common.ESequencePrefix;
+import io.corementor.finexp.common.ESequenceType;
+import io.corementor.finexp.common.SequenceNumberGeneratorUtil;
 import io.corementor.finexp.inventory.productType.domain.ProductTypeEntity;
 import io.corementor.finexp.inventory.productType.repository.IProductTypeRepository;
 import lombok.RequiredArgsConstructor;
