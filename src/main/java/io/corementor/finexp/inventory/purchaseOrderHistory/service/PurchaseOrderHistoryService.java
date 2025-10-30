@@ -1,6 +1,5 @@
 package io.corementor.finexp.inventory.purchaseOrderHistory.service;
 
-import io.corementor.finexp.common.EPurchaseOrderHistoryStatus;
 import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import io.corementor.finexp.inventory.purchaseOrder.service.PurchaseOrderQueryService;
 import io.corementor.finexp.inventory.purchaseOrderHistory.domain.PurchaseOrderHistoryEntity;
@@ -8,11 +7,8 @@ import io.corementor.finexp.inventory.purchaseOrderHistory.repository.IPurchaseO
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import psychemesh.framework.core.message.IUserMessage;
-import psychemesh.framework.core.response.Response;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 /**
  * The Class Purchase Order History Service.

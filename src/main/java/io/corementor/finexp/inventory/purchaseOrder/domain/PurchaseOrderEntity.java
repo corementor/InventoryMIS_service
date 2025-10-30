@@ -2,8 +2,7 @@ package io.corementor.finexp.inventory.purchaseOrder.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import io.corementor.finexp.common.EPurchaseOrderHistoryStatus;
-import io.corementor.finexp.inventory.purchaseOrderHistory.domain.PurchaseOrderHistoryEntity;
+import io.corementor.finexp.common.EOrderHistoryStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,5 +49,5 @@ public class PurchaseOrderEntity extends AbstractBaseEntity {
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "order_history_status")
-    private EPurchaseOrderHistoryStatus status;
+    private EOrderHistoryStatus status;
 }

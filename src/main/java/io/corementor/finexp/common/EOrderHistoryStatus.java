@@ -1,12 +1,12 @@
 package io.corementor.finexp.common;
 
 /**
- * The enum EPurchaseOrderHistoryStatus.
+ * The enum EOrderHistoryStatus.
  *
  * @author Blaise Mugisha
  * @version 1.0
  */
-public enum EPurchaseOrderHistoryStatus {
+public enum EOrderHistoryStatus {
     CREATED,
     SUBMITTED,
     APPROVED,

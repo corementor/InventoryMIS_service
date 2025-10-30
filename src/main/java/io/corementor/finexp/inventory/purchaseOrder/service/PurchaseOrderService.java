@@ -52,6 +52,8 @@ public class PurchaseOrderService {
 
     private final PurchaseOrderHistoryService purchaseOrderHistoryService;
 
+
+
     /**
      * Create purchase order with items
      */
@@ -129,7 +131,7 @@ public class PurchaseOrderService {
             thePurchaseOrderEntity.setTotalPrice(totalPrice);
             thePurchaseOrderEntity.setCreatedAt(LocalDateTime.now());
             thePurchaseOrderEntity.setModifiedAt(LocalDateTime.now());
-            thePurchaseOrderEntity.setStatus(EPurchaseOrderHistoryStatus.CREATED);
+            thePurchaseOrderEntity.setStatus(EOrderHistoryStatus.CREATED);
 
 
             PurchaseOrderEntity savedOrder = purchaseOrderRepository.save(thePurchaseOrderEntity);
@@ -447,13 +449,13 @@ public class PurchaseOrderService {
                 return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
             }
 
-            if (existingOrder.getStatus() != EPurchaseOrderHistoryStatus.CREATED &&
-                    existingOrder.getStatus() != EPurchaseOrderHistoryStatus.RETURNED) {
+            if (existingOrder.getStatus() != EOrderHistoryStatus.CREATED &&
+                    existingOrder.getStatus() != EOrderHistoryStatus.RETURNED) {
                 return new Response<>("Cannot submit order. Current status: " + existingOrder.getStatus());
             }
 
 
-            existingOrder.setStatus(EPurchaseOrderHistoryStatus.SUBMITTED);
+            existingOrder.setStatus(EOrderHistoryStatus.SUBMITTED);
             existingOrder.setModifiedAt(LocalDateTime.now());
             PurchaseOrderEntity updatedOrder = purchaseOrderRepository.save(existingOrder);
 
@@ -483,12 +485,12 @@ public class PurchaseOrderService {
             }
 
 
-            if (existingOrder.getStatus() != EPurchaseOrderHistoryStatus.SUBMITTED) {
+            if (existingOrder.getStatus() != EOrderHistoryStatus.SUBMITTED) {
                 return new Response<>("Cannot approve order. Current status: " + existingOrder.getStatus());
             }
 
 
-            existingOrder.setStatus(EPurchaseOrderHistoryStatus.APPROVED);
+            existingOrder.setStatus(EOrderHistoryStatus.APPROVED);
             existingOrder.setModifiedAt(LocalDateTime.now());
             PurchaseOrderEntity updatedOrder = purchaseOrderRepository.save(existingOrder);
 
@@ -522,7 +524,7 @@ public class PurchaseOrderService {
             }
 
 
-            if (existingOrder.getStatus() != EPurchaseOrderHistoryStatus.SUBMITTED) {
+            if (existingOrder.getStatus() != EOrderHistoryStatus.SUBMITTED) {
                 return new Response<>("Cannot return order. Current status: " + existingOrder.getStatus());
             }
 
@@ -531,7 +533,7 @@ public class PurchaseOrderService {
             }
 
 
-            existingOrder.setStatus(EPurchaseOrderHistoryStatus.RETURNED);
+            existingOrder.setStatus(EOrderHistoryStatus.RETURNED);
             existingOrder.setModifiedAt(LocalDateTime.now());
             PurchaseOrderEntity updatedOrder = purchaseOrderRepository.save(existingOrder);
 

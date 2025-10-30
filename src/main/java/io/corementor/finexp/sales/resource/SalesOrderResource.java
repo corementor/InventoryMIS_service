@@ -1,5 +1,7 @@
 package io.corementor.finexp.sales.resource;
 
+import io.corementor.finexp.common.RequestDto;
+import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import io.corementor.finexp.sales.salesOrder.domain.SalesOrderEntity;
 import io.corementor.finexp.sales.salesOrder.service.SalesOrderQueryService;
 import io.corementor.finexp.sales.salesOrder.service.SalesOrderService;
@@ -77,4 +79,41 @@ public class SalesOrderResource {
     public Response<SalesOrderEntity> deleteSalesOrderItem(@PathVariable UUID itemId) {
         return salesOrderService.deleteSalesOrderItem(itemId);
     }
+
+    /**
+     * Submit for approval
+     *
+     * @param requestDto the RequestDto
+     * @return response
+     */
+    @PostMapping("/submitForApproval")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<SalesOrderEntity> submitForApproval(@RequestBody RequestDto requestDto) {
+        return salesOrderService.submitForApproval(requestDto);
+    }
+
+    /**
+     * Approve Sales Order
+     *
+     * @param requestDto the RequestDto
+     * @return response
+     */
+    @PostMapping("/approveOrder")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<SalesOrderEntity> approveSalesOrder(@RequestBody RequestDto requestDto) {
+        return salesOrderService.approveSalesOrder(requestDto);
+    }
+
+    /**
+     * Return Sales Order
+     *
+     * @param requestDto the RequestDto
+     * @return response
+     */
+    @PostMapping("/returnOrder")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<SalesOrderEntity> returnSalesOrder(@RequestBody RequestDto requestDto) {
+        return salesOrderService.returnSalesOrder(requestDto);
+    }
+
 }

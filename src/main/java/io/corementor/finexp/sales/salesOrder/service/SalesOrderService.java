@@ -1,14 +1,14 @@
 package io.corementor.finexp.sales.salesOrder.service;
 
 import io.corementor.finexp.base.IMessage;
-import io.corementor.finexp.common.ESequencePrefix;
-import io.corementor.finexp.common.ESequenceType;
-import io.corementor.finexp.common.SequenceNumberGeneratorUtil;
+import io.corementor.finexp.common.*;
 import io.corementor.finexp.inventory.productType.domain.ProductTypeEntity;
 import io.corementor.finexp.inventory.productType.service.ProductTypeQueryService;
+import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import io.corementor.finexp.sales.salesOrder.domain.SalesOrderItemEntity;
 import io.corementor.finexp.sales.salesOrder.domain.SalesOrderEntity;
 import io.corementor.finexp.sales.salesOrder.repository.ISalesOrderRepository;
+import io.corementor.finexp.sales.salesOrderHistory.service.SalesOrderHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,6 +46,11 @@ public class SalesOrderService {
      */
     private final ISalesOrderRepository salesOrderRepository;
 
+    /**
+     * The Sales order respository
+     */
+
+    private final SalesOrderHistoryService salesOrderHistoryService;
     /**
      * Create sales order
      *
@@ -87,8 +92,8 @@ public class SalesOrderService {
                         throw new IllegalArgumentException("Invalid unit price or quantity for product: " + productType.getProductName());
                     }
                     BigDecimal itemTotalPrice = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-                    item.setTotalPrice(itemTotalPrice); // Set individual item total
-                    totalPrice = totalPrice.add(itemTotalPrice); // Add to order total
+                    item.setTotalPrice(itemTotalPrice);
+                    totalPrice = totalPrice.add(itemTotalPrice);
 
                     item.setCreatedAt(LocalDateTime.now());
                 }
@@ -96,8 +101,10 @@ public class SalesOrderService {
             theSalesOrderEntity.setTotalPrice(totalPrice);
             theSalesOrderEntity.setCreatedAt(LocalDateTime.now());
             theSalesOrderEntity.setModifiedAt(LocalDateTime.now());
+            theSalesOrderEntity.setStatus(EOrderHistoryStatus.CREATED);
 
             SalesOrderEntity savedOrder = salesOrderRepository.save(theSalesOrderEntity);
+            salesOrderHistoryService.createSalesOrderHistory(savedOrder,"INITIAL SALE HISTORY CREATED");
 
             return new Response<>(savedOrder, IMessage.INFORMATION_SAVED);
 
@@ -311,6 +318,122 @@ public class SalesOrderService {
         } catch (Exception e) {
             log.error("Error deleting sales order item: {}", e.getMessage(), e);
             return new Response<>(IUserMessage.ERROR);
+        }
+    }
+
+
+
+    /**
+     * Submit for Approval
+     *
+     * @param requestDto the Request dto
+     * @return response
+     */
+    public Response<SalesOrderEntity> submitForApproval(RequestDto requestDto) {
+        try {
+            SalesOrderEntity existingOrder = salesOrderRepository.findById(requestDto.getId())
+                    .orElse(null);
+            if (existingOrder == null) {
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
+            }
+
+            if (existingOrder.getStatus() != EOrderHistoryStatus.CREATED &&
+                    existingOrder.getStatus() != EOrderHistoryStatus.RETURNED) {
+                return new Response<>("Cannot submit order. Current status: " + existingOrder.getStatus());
+            }
+
+
+            existingOrder.setStatus(EOrderHistoryStatus.SUBMITTED);
+            existingOrder.setModifiedAt(LocalDateTime.now());
+            SalesOrderEntity updatedOrder = salesOrderRepository.save(existingOrder);
+
+
+            salesOrderHistoryService.createSalesOrderHistory(updatedOrder, requestDto.getComment());
+
+            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+
+        } catch (Exception ex) {
+            log.error("Error submitting purchase order for approval: {}", ex.getMessage(), ex);
+            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
+        }
+    }
+
+    /**
+     * Approve SalesOrder
+     *
+     * @param requestDto the RequestDto
+     * @return response
+     */
+    public Response<SalesOrderEntity> approveSalesOrder(RequestDto requestDto) {
+        try {
+            SalesOrderEntity existingOrder = salesOrderRepository.findById(requestDto.getId())
+                    .orElse(null);
+            if (existingOrder == null) {
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
+            }
+
+
+            if (existingOrder.getStatus() != EOrderHistoryStatus.SUBMITTED) {
+                return new Response<>("Cannot approve order. Current status: " + existingOrder.getStatus());
+            }
+
+
+            existingOrder.setStatus(EOrderHistoryStatus.APPROVED);
+            existingOrder.setModifiedAt(LocalDateTime.now());
+            SalesOrderEntity updatedOrder = salesOrderRepository.save(existingOrder);
+
+
+            String comment = "Order approved by manager";
+            if (requestDto.getComment() != null && !requestDto.getComment().trim().isEmpty()) {
+                comment += ". Comment: " + requestDto.getComment();
+            }
+            salesOrderHistoryService.createSalesOrderHistory(updatedOrder, comment);
+
+            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+
+        } catch (Exception ex) {
+            log.error("Error approving purchase order: {}", ex.getMessage(), ex);
+            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
+        }
+    }
+
+    /**
+     * Return SalesOrder
+     *
+     * @param requestDto the RequestDto
+     * @return response
+     */
+    public Response<SalesOrderEntity> returnSalesOrder(RequestDto requestDto) {
+        try {
+            SalesOrderEntity existingOrder = salesOrderRepository.findById(requestDto.getId())
+                    .orElse(null);
+            if (existingOrder == null) {
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
+            }
+
+
+            if (existingOrder.getStatus() != EOrderHistoryStatus.SUBMITTED) {
+                return new Response<>("Cannot return order. Current status: " + existingOrder.getStatus());
+            }
+
+            if (requestDto.getComment() == null || requestDto.getComment().trim().isEmpty()) {
+                return new Response<>("Return reason is required");
+            }
+
+
+            existingOrder.setStatus(EOrderHistoryStatus.RETURNED);
+            existingOrder.setModifiedAt(LocalDateTime.now());
+            SalesOrderEntity updatedOrder = salesOrderRepository.save(existingOrder);
+
+
+            salesOrderHistoryService.createSalesOrderHistory(updatedOrder,
+                    "Order returned by manager. Reason: " + requestDto.getComment());
+
+            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+
+        } catch (Exception ex) {
+            log.error("Error returning purchase order: {}", ex.getMessage(), ex);
+            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
         }
     }
 

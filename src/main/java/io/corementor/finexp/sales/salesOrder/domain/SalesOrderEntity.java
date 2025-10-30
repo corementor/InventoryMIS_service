@@ -1,6 +1,7 @@
 package io.corementor.finexp.sales.salesOrder.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.corementor.finexp.common.EOrderHistoryStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,4 +43,12 @@ public class SalesOrderEntity  extends AbstractBaseEntity {
     @OneToMany(mappedBy = "saleOrderEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<SalesOrderItemEntity> orderItems = new ArrayList<>();
+
+    /**
+     * The order history status
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "order_history_status")
+    private EOrderHistoryStatus status;
+
 }

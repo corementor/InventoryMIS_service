@@ -1,8 +1,8 @@
-package io.corementor.finexp.inventory.purchaseOrderHistory.domain;
+package io.corementor.finexp.sales.salesOrderHistory.domain;
 
 
 import io.corementor.finexp.common.EOrderHistoryStatus;
-import io.corementor.finexp.inventory.purchaseOrder.domain.PurchaseOrderEntity;
+import io.corementor.finexp.sales.salesOrder.domain.SalesOrderEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,14 +17,14 @@ import psychemesh.framework.domain.AbstractBaseEntity;
 @Getter
 @Setter
 @Entity
-@Table(name = "inv_purchase_order_history", schema = "inventory")
-public class PurchaseOrderHistoryEntity extends AbstractBaseEntity {
+@Table(name = "inv_sales_order_history", schema = "inventory")
+public class SalesOrderHistoryEntity extends AbstractBaseEntity {
     /**
-     * The purchase order
+     * The sales order
      */
     @ManyToOne
-    @JoinColumn(name = "purchase_order_id", nullable = false)
-    private PurchaseOrderEntity purchaseOrder;
+    @JoinColumn(name = "sales_order_id", nullable = false)
+    private SalesOrderEntity salesOrder;
 
     /**
      * The order history status
