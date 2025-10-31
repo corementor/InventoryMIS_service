@@ -47,7 +47,7 @@ public class SalesOrderService {
     private final ISalesOrderRepository salesOrderRepository;
 
     /**
-     * The Sales order respository
+     * The Sales order repository
      */
 
     private final SalesOrderHistoryService salesOrderHistoryService;
@@ -114,7 +114,28 @@ public class SalesOrderService {
         }
 
     }
+    /**
+     * Delete sales order
+     *
+     * @param theSalesOrder the sales order
+     * @return response
+     */
+    public Response<SalesOrderEntity> deleteSalesOrder(SalesOrderEntity theSalesOrder) {
+        try {
+            SalesOrderEntity existingOrder = salesOrderRepository.findById(theSalesOrder.getId())
+                    .orElse(null);
+            if (existingOrder == null) {
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
+            }
+            theSalesOrder.setState(EEntityLifeCycle.INACTIVE);
+            SalesOrderEntity updatedOrder = salesOrderRepository.save(theSalesOrder);
 
+            return new Response<>(updatedOrder, IUserMessage.INFORMATION_DELETED);
+        } catch (Exception e) {
+            log.error("Error deleting sales order {} ", e.getMessage());
+            return new Response<>(IUserMessage.ERROR);
+        }
+    }
     /**
      * Create updatePurchaseOrderWithItems
      *
@@ -271,6 +292,7 @@ public class SalesOrderService {
                 })
                 .reduce(BigDecimal.ZERO, BigDecimal::add); // Sum all item totals
     }
+
 
     /**
      * Delete sales order item

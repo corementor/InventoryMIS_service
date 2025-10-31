@@ -1,8 +1,10 @@
 package io.corementor.finexp.security.resource;
 
+import io.corementor.finexp.base.IMessage;
 import io.corementor.finexp.security.domain.UserEntity;
 import io.corementor.finexp.security.service.UserQueryServiceProcessor;
 import io.corementor.finexp.security.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,7 @@ import psychemesh.framework.core.response.Response;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * The User resource class.
@@ -43,22 +46,45 @@ public class UserResource {
     }
 
     /**
+     * Create user.
+     *
+     * @param userEntity the user entity
+     * @return response
+     */
+    @PostMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<UserEntity> updateUser(@RequestBody UserEntity userEntity) {
+        return userService.updateUser(userEntity);
+    }
+
+    /**
      * Delete user
      *
      * @param userEntity the user entity
      * @return response
      */
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
-    public Response<UserEntity> deleteUser(@RequestBody UserEntity userEntity) {
-        return userService.deleteUser(userEntity);
+    public Response<UserEntity> deleteUser(@RequestBody UserEntity userEntity,
+                                           HttpServletRequest request
+    ) {
+        try {
+            String body = request.getReader().lines()
+                    .collect(Collectors.joining());
+            System.out.println("Raw body: " + body);
+            return userService.deleteUser(userEntity);
+        } catch (Exception e) {
+            return new Response<>(IMessage.INFORMATION_NOT_FOUND);
+        }
+//
     }
 
     /**
      * List all users
+     *
      * @return response
      */
-    @GetMapping("/list")
+    @GetMapping("/search/criteria/all")
     @ResponseStatus(HttpStatus.OK)
     public Response<List<UserEntity>> listUsers() {
         return userQueryServiceProcessor.listUsers();
@@ -66,6 +92,7 @@ public class UserResource {
 
     /**
      * Find user by id
+     *
      * @param id the user id
      * @return response
      */

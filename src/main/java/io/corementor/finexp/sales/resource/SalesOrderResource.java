@@ -58,6 +58,18 @@ public class SalesOrderResource {
     }
 
     /**
+     * Get sales order by id
+     *
+     * @param theId The UUId
+     * @return response
+     */
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<SalesOrderEntity> getSalesOrderById(@PathVariable("id") UUID theId) {
+        return salesOrderQueryService.findSalesOrderById(theId);
+    }
+
+    /**
      * Update sales order
      *
      * @param theSalesOrder the sales order
@@ -70,7 +82,21 @@ public class SalesOrderResource {
     }
 
     /**
+     * Delete sales order
+     *
+     * @param theSalesOrder the sales order
+     * @return response
+     */
+    @PostMapping("/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<SalesOrderEntity> deleteSalesOrder(@RequestBody SalesOrderEntity theSalesOrder) {
+        return salesOrderService.deleteSalesOrder(theSalesOrder);
+    }
+
+
+    /**
      * Delete sales order item
+     *
      * @param itemId the UUID
      * @return response
      */

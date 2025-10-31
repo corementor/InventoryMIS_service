@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import psychemesh.framework.common.util.EEntityLifeCycle;
 import psychemesh.framework.core.response.Response;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,4 +24,7 @@ import java.util.UUID;
 public interface IRoleRepository extends JpaRepository<RoleEntity, UUID>, JpaSpecificationExecutor<RoleEntity> {
     @Query("SELECT r FROM RoleEntity r WHERE r.roleName = :roleName AND r.state = :state")
     Optional<RoleEntity> findAllByRoleNameAndState(@Param("roleName") String roleName, EEntityLifeCycle state);
+
+    List<RoleEntity> findAllByState(EEntityLifeCycle state);
+
 }

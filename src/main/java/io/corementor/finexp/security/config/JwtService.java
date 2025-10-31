@@ -90,8 +90,8 @@ public class JwtService {
 
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
 
-        System.out.println("Secret key length: " + SECRET_KEY.length());
-        System.out.println("Decoded key bytes length: " + keyBytes.length);
+      /*  System.out.println("Secret key length: " + SECRET_KEY.length());
+        System.out.println("Decoded key bytes length: " + keyBytes.length);*/
 
         return Keys.hmacShaKeyFor(keyBytes);
     }

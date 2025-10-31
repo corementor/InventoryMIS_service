@@ -6,8 +6,10 @@ import io.corementor.finexp.security.repository.IRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import psychemesh.framework.common.util.EEntityLifeCycle;
+import psychemesh.framework.core.message.IUserMessage;
 import psychemesh.framework.core.response.Response;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,5 +40,19 @@ public class RoleQueryServiceProcessor {
             RoleEntity roleEntity = found.get();
             return new Response<>(roleEntity, IMessage.INFORMATION_FOUND);
         }
+    }
+
+    /**
+     * Fina all roles
+     *
+     * @return response
+     */
+    public Response<List<RoleEntity>> findAllRoles() {
+
+        List<RoleEntity> roleEntities =
+                repository.findAllByState(EEntityLifeCycle.ACTIVE);
+
+        return
+                new Response<>(roleEntities, roleEntities.isEmpty() ? IUserMessage.INFORMATION_NOT_FOUND : IUserMessage.INFORMATION_FOUND);
     }
 }

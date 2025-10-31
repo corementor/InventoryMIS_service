@@ -17,14 +17,19 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * The User query service class.
+ * The User Query service class.
  *
  * @author Blaise Mugisha
  * @version 1.0
  */
-@Service@RequiredArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class UserQueryServiceProcessor {
+    /**
+     * The User repository service
+     */
     private final IUserRepository userRepository;
+
     /**
      * List all users
      *
@@ -33,8 +38,10 @@ public class UserQueryServiceProcessor {
     public Response<List<UserEntity>> listUsers() {
         return new Response<>(userRepository.findAllByState(EEntityLifeCycle.ACTIVE));
     }
+
     /**
      * Find by id
+     *
      * @return response
      */
     public Response<UserEntity> findUserById(UUID id) {
@@ -43,7 +50,25 @@ public class UserQueryServiceProcessor {
 
     }
 
-    public Page<UserEntity> getAllUsers(Pageable pageable){
+    /**
+     * Find user by entity
+     *
+     * @return response
+     */
+    public Response<UserEntity> findUserByEntity(UserEntity theUser) {
+        Optional<UserEntity> optionalUser = userRepository.findUserEntityByIdAndState(theUser.getId(), EEntityLifeCycle.ACTIVE);
+        return optionalUser.map(userEntity -> new Response<>(userEntity, IMessage.INFORMATION_FOUND)).orElseGet(() -> new Response<>(IMessage.INFORMATION_NOT_FOUND));
+    }
+
+
+    /**
+     * Get All Users
+     *
+     * @param pageable the Pageable
+     * @return page
+     */
+
+    public Page<UserEntity> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 }

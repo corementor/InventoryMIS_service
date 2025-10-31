@@ -30,4 +30,6 @@ public interface IUserRepository extends JpaRepository<UserEntity, UUID>, JpaSpe
     List<UserEntity> findAllByState(EEntityLifeCycle state);
 
     Optional<UserEntity> findByIdAndState(UUID id, EEntityLifeCycle eEntityLifeCycle);
+
+    Optional<UserEntity> findUserEntityByIdAndState(UUID id, EEntityLifeCycle state);
 }

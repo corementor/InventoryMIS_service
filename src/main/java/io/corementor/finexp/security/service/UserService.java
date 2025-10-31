@@ -37,6 +37,12 @@ public class UserService {
      * The user repository.
      */
     private final IUserRepository userRepository;
+
+    /**
+     * The user query service
+     */
+
+    private final UserQueryServiceProcessor userQueryServiceProcessor;
     /**
      * The role repository
      */
@@ -56,6 +62,7 @@ public class UserService {
      * The password encoder.
      */
     private final PasswordEncoder passwordEncoder;
+
     /**
      * The admin email.
      */
@@ -114,10 +121,53 @@ public class UserService {
                 }
                 userEntity.setRole(managedRoles);
             }
+            userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
             userEntity.setCreatedAt(LocalDateTime.now());
             return new Response<>(userRepository.save(userEntity));
         }
     }
+
+    /**
+     * update user
+     *
+     * @param theUser the user entity
+     * @return response
+     */
+    public Response<UserEntity> updateUser(UserEntity theUser) {
+        try {
+            if (theUser == null) {
+                return new Response<>(IMessage.INVALID_INPUT);
+            }
+
+
+            Response<UserEntity> optionalUser = userQueryServiceProcessor.findUserByEntity(theUser);
+            UserEntity found = optionalUser.getData();
+
+
+            Optional.ofNullable(theUser.getFirstName()).ifPresent(found::setFirstName);
+            Optional.ofNullable(theUser.getLastName()).ifPresent(found::setLastName);
+            Optional.ofNullable(theUser.getEmail()).ifPresent(found::setEmail);
+            Optional.ofNullable(theUser.getPhoneNumber()).ifPresent(found::setPhoneNumber);
+            Optional.ofNullable(passwordEncoder.encode(theUser.getPassword())).ifPresent(found::setPassword);
+
+            if (theUser.getRole() != null && !theUser.getRole().isEmpty()) {
+                RoleEntity roleDto = theUser.getRole().stream().findFirst().get();
+                RoleEntity theRole = roleQueryServiceProcessor.findByRoleNameAndState(roleDto.getRoleName()).getData();
+//                Set<RoleEntity> roles =found.getRole();
+//                roles.add(theRole);
+//                found.setRole(roles);
+                found.getRole().add(theRole);
+            }
+
+
+            return new Response<>(userRepository.save(found), IUserMessage.INFORMATION_UPDATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert theUser != null;
+            throw new ObjectNotFoundException(theUser, "Your user : {} is not found" + theUser.getFirstName());
+        }
+    }
+
 
     /**
      * Delete user
@@ -126,7 +176,7 @@ public class UserService {
      * @return response
      */
     public Response<UserEntity> deleteUser(UserEntity userEntity) {
-        Optional<UserEntity> optionalUser = userRepository.findUserEntityByEmail(userEntity.getEmail());
+        Optional<UserEntity> optionalUser = userRepository.findById(userEntity.getId());
         if (optionalUser.isPresent()) {
             userEntity.setState(EEntityLifeCycle.INACTIVE);
             return new Response<>(userRepository.save(userEntity));
@@ -147,11 +197,11 @@ public class UserService {
 
         UserEntity adminUser = new UserEntity();
 
-        adminUser.setEmail(adminEmail);
+        adminUser.setEmail(adminEmail.toLowerCase());
         adminUser.setPassword(passwordEncoder.encode(adminPassword));
-        adminUser.setFirstName(adminFirstName);
-        adminUser.setLastName(adminLastName);
-        adminUser.setPhoneNumber(adminPhoneNumber);
+        adminUser.setFirstName(adminFirstName.toLowerCase());
+        adminUser.setLastName(adminLastName.toLowerCase());
+        adminUser.setPhoneNumber(adminPhoneNumber.trim());
         adminUser.setState(EEntityLifeCycle.ACTIVE);
         adminUser.setCreatedAt(LocalDateTime.now());
         RoleEntity adminRole;
