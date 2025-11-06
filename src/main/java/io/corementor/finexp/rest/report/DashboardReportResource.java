@@ -51,9 +51,7 @@ public class DashboardReportResource {
         reportDto.setSalesOrderReportDto(this.salesOrderOrchestratorQueryProcessor.generateReport().getData());
         reportDto.setTotalUsers(this.userEntityOrchestratorQueryProcessor.countActiveUsers());
         reportDto.setTotalProductTypes(this.productTypeOrchestratorQueryProcessor.countProductTypes());
-
-        System.out.println(reportDto);
-
+//        System.out.println(reportDto);
         return new Response<>(reportDto, IUserMessage.INFORMATION_FOUND);
     }
 }

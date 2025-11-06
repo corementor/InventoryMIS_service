@@ -5,6 +5,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+
+/**
+ * The Class Purchase Order Report Dto
+ * @author Blaise Mugisha
+ * @version 1.0
+ */
 @ToString
 @Getter
 @Setter

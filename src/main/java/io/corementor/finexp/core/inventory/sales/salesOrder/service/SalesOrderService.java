@@ -3,7 +3,6 @@ package io.corementor.finexp.core.inventory.sales.salesOrder.service;
 import io.corementor.finexp.base.IMessage;
 import io.corementor.finexp.base.SequenceNumberGeneratorUtil;
 import io.corementor.finexp.common.*;
-import io.corementor.finexp.common.dto.SalesOrderReportDto;
 import io.corementor.finexp.common.dto.RequestDto;
 import io.corementor.finexp.core.inventory.productType.domain.ProductTypeEntity;
 import io.corementor.finexp.core.inventory.productType.service.ProductTypeQueryService;

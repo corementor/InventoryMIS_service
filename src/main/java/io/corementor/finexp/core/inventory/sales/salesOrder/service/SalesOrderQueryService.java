@@ -60,19 +60,19 @@ public class SalesOrderQueryService {
     /**
      * generate report
      *
-     * @return response <Purchase order report dto>
+     * @return response <Sales order report dto>
      */
     public Response<SalesOrderReportDto> generateReport() {
 
-        SalesOrderReportDto purchaseOrderReportDto = new SalesOrderReportDto();
+        SalesOrderReportDto salesOrderReportDto = new SalesOrderReportDto();
 
-        purchaseOrderReportDto.setTotalSalesOrders(BigDecimal.valueOf(this.salesOrderRepository.countAllByState(EEntityLifeCycle.ACTIVE)));
-        purchaseOrderReportDto.setTotalCreated(BigDecimal.valueOf(this.salesOrderRepository.countAllByStatusAndState(EOrderHistoryStatus.CREATED, EEntityLifeCycle.ACTIVE)));
-        purchaseOrderReportDto.setTotalSubmitted(BigDecimal.valueOf(this.salesOrderRepository.countAllByStatusAndState(EOrderHistoryStatus.SUBMITTED, EEntityLifeCycle.ACTIVE)));
-        purchaseOrderReportDto.setTotalApproved(BigDecimal.valueOf(this.salesOrderRepository.countAllByStatusAndState(EOrderHistoryStatus.APPROVED, EEntityLifeCycle.ACTIVE)));
-        purchaseOrderReportDto.setTotalReturned(BigDecimal.valueOf(this.salesOrderRepository.countAllByStatusAndState(EOrderHistoryStatus.RETURNED, EEntityLifeCycle.ACTIVE)));
+        salesOrderReportDto.setTotalSalesOrders(BigDecimal.valueOf(this.salesOrderRepository.countAllByState(EEntityLifeCycle.ACTIVE)));
+        salesOrderReportDto.setTotalCreated(BigDecimal.valueOf(this.salesOrderRepository.countAllByStatusAndState(EOrderHistoryStatus.CREATED, EEntityLifeCycle.ACTIVE)));
+        salesOrderReportDto.setTotalSubmitted(BigDecimal.valueOf(this.salesOrderRepository.countAllByStatusAndState(EOrderHistoryStatus.SUBMITTED, EEntityLifeCycle.ACTIVE)));
+        salesOrderReportDto.setTotalApproved(BigDecimal.valueOf(this.salesOrderRepository.countAllByStatusAndState(EOrderHistoryStatus.APPROVED, EEntityLifeCycle.ACTIVE)));
+        salesOrderReportDto.setTotalReturned(BigDecimal.valueOf(this.salesOrderRepository.countAllByStatusAndState(EOrderHistoryStatus.RETURNED, EEntityLifeCycle.ACTIVE)));
 
-        return new Response<>(purchaseOrderReportDto, IUserMessage.INFORMATION_FOUND);
+        return new Response<>(salesOrderReportDto, IUserMessage.INFORMATION_FOUND);
 
     }
 }

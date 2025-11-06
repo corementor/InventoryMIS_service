@@ -5,6 +5,7 @@ import io.corementor.finexp.core.inventory.purchaseOrder.service.PurchaseOrderQu
 import io.corementor.finexp.core.inventory.purchaseOrder.service.PurchaseOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import psychemesh.framework.core.message.IUserMessage;
 import psychemesh.framework.core.response.Response;
 
 /**
@@ -24,10 +25,12 @@ public class PurchaseOrderOrchestratorQueryProcessor {
 
     /**
      * generate report
+     *
      * @return response <PurchaseOrderDto>
      */
-    public Response<PurchaseOrderReportDto> generateReport(){
-        return purchaseOrderQueryService.generateReport();
+    public Response<PurchaseOrderReportDto> generateReport() {
+        PurchaseOrderReportDto purchaseOrderReportDto = purchaseOrderQueryService.generateReport().getData();
+        return new Response<>(purchaseOrderReportDto, IUserMessage.INFORMATION_FOUND);
     }
 
 
