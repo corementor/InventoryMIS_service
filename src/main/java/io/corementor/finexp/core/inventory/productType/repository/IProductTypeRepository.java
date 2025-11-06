@@ -31,4 +31,11 @@ public interface IProductTypeRepository  extends JpaRepository<ProductTypeEntity
      * @return  list
      */
     Optional<ProductTypeEntity> findByIdAndState(UUID id, EEntityLifeCycle state);
+
+    /**
+     * count All by state
+     * @param state  EEntityLifeCycle
+     * @return response
+     */
+    int countAllByState(EEntityLifeCycle state);
 }

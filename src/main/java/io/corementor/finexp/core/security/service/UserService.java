@@ -1,7 +1,7 @@
 package io.corementor.finexp.core.security.service;
 
 import io.corementor.finexp.base.IMessage;
-import io.corementor.finexp.common.UserDto;
+import io.corementor.finexp.common.dto.UserDto;
 import io.corementor.finexp.core.security.domain.RoleEntity;
 import io.corementor.finexp.core.security.domain.UserEntity;
 import io.corementor.finexp.core.security.repository.IRoleRepository;

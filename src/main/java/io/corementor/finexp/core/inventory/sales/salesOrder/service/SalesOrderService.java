@@ -1,7 +1,10 @@
 package io.corementor.finexp.core.inventory.sales.salesOrder.service;
 
 import io.corementor.finexp.base.IMessage;
+import io.corementor.finexp.base.SequenceNumberGeneratorUtil;
 import io.corementor.finexp.common.*;
+import io.corementor.finexp.common.dto.SalesOrderReportDto;
+import io.corementor.finexp.common.dto.RequestDto;
 import io.corementor.finexp.core.inventory.productType.domain.ProductTypeEntity;
 import io.corementor.finexp.core.inventory.productType.service.ProductTypeQueryService;
 import io.corementor.finexp.core.inventory.sales.salesOrder.domain.SalesOrderItemEntity;
@@ -50,6 +53,7 @@ public class SalesOrderService {
      */
 
     private final SalesOrderHistoryService salesOrderHistoryService;
+
     /**
      * Create sales order
      *
@@ -103,7 +107,7 @@ public class SalesOrderService {
             theSalesOrderEntity.setStatus(EOrderHistoryStatus.CREATED);
 
             SalesOrderEntity savedOrder = salesOrderRepository.save(theSalesOrderEntity);
-            salesOrderHistoryService.createSalesOrderHistory(savedOrder,"INITIAL SALE HISTORY CREATED");
+            salesOrderHistoryService.createSalesOrderHistory(savedOrder, "INITIAL SALE HISTORY CREATED");
 
             return new Response<>(savedOrder, IMessage.INFORMATION_SAVED);
 
@@ -113,6 +117,7 @@ public class SalesOrderService {
         }
 
     }
+
     /**
      * Delete sales order
      *
@@ -135,6 +140,7 @@ public class SalesOrderService {
             return new Response<>(IUserMessage.ERROR);
         }
     }
+
     /**
      * Create updatePurchaseOrderWithItems
      *
@@ -317,23 +323,23 @@ public class SalesOrderService {
             SalesOrderEntity order = optionalSalesOrder.get();
 
             SalesOrderItemEntity targetItem = order.getOrderItems().stream()
-                    .filter(i-> theId.equals(i.getId()))
+                    .filter(i -> theId.equals(i.getId()))
                     .findFirst()
                     .orElse(null);
 
-            if(targetItem==null){
+            if (targetItem == null) {
                 return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
             }
 
             targetItem.setState(EEntityLifeCycle.INACTIVE);
             targetItem.setModifiedAt(LocalDateTime.now());
 
-            BigDecimal newTotal=calculateTotalPrice(order);
+            BigDecimal newTotal = calculateTotalPrice(order);
             order.setTotalPrice(newTotal);
             order.setModifiedAt(LocalDateTime.now());
 
-            SalesOrderEntity saved=salesOrderRepository.save(order);
-            return new Response<>(saved,IMessage.INFORMATION_UPDATED);
+            SalesOrderEntity saved = salesOrderRepository.save(order);
+            return new Response<>(saved, IMessage.INFORMATION_UPDATED);
 
 
         } catch (Exception e) {
@@ -341,7 +347,6 @@ public class SalesOrderService {
             return new Response<>(IUserMessage.ERROR);
         }
     }
-
 
 
     /**

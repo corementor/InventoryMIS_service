@@ -37,7 +37,7 @@ public class ProductTypeQueryService {
      * @return response
      */
     public Response<ProductTypeEntity> findProductTypeById(UUID id) {
-        ProductTypeEntity productType = productTypeRepository.findByIdAndState(id,EEntityLifeCycle.ACTIVE)
+        ProductTypeEntity productType = productTypeRepository.findByIdAndState(id, EEntityLifeCycle.ACTIVE)
                 .orElseThrow(() -> new ObjectNotFoundException(IMessage.INFORMATION_NOT_FOUND, "Product type  object not found"));
         return new Response<>(productType, IMessage.INFORMATION_FOUND);
     }
@@ -52,5 +52,15 @@ public class ProductTypeQueryService {
                 .findAllByState(EEntityLifeCycle.ACTIVE);
 
         return new Response<>(purchaseOrderList, IUserMessage.INFORMATION_FOUND);
+    }
+
+    /**
+     * count product types
+     *
+     * @return int
+     */
+    public int countProductTypes() {
+        return
+                productTypeRepository.countAllByState(EEntityLifeCycle.ACTIVE);
     }
 }

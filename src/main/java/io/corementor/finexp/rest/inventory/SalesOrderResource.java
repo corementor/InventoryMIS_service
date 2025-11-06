@@ -1,6 +1,6 @@
 package io.corementor.finexp.rest.inventory;
 
-import io.corementor.finexp.common.RequestDto;
+import io.corementor.finexp.common.dto.RequestDto;
 import io.corementor.finexp.core.inventory.sales.salesOrder.domain.SalesOrderEntity;
 import io.corementor.finexp.core.inventory.sales.salesOrder.service.SalesOrderQueryService;
 import io.corementor.finexp.core.inventory.sales.salesOrder.service.SalesOrderService;

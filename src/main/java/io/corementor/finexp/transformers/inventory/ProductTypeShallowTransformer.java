@@ -1,19 +1,19 @@
-package io.corementor.finexp.transformers;
+package io.corementor.finexp.transformers.inventory;
 
-import io.corementor.finexp.common.UserDto;
-import io.corementor.finexp.core.security.domain.UserEntity;
+import io.corementor.finexp.common.dto.ProductTypeDto;
+import io.corementor.finexp.core.inventory.productType.domain.ProductTypeEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import psychemesh.framework.transformer.AbstractEntityTransformer;
 
 /**
- * The Class user shallow transformer
+ * The Class ProductType shallow transformer
  * @author BLAISE MUGISHA
  * @version 1.0
  */
 @RequiredArgsConstructor
 @Service
-public class UserShallowTransformer   extends AbstractEntityTransformer<UserDto, UserEntity> {
+public class ProductTypeShallowTransformer extends AbstractEntityTransformer<ProductTypeDto, ProductTypeEntity> {
 
     /**
      * To entity.
@@ -22,10 +22,9 @@ public class UserShallowTransformer   extends AbstractEntityTransformer<UserDto,
      * @return the entity
      */
     @Override
-    public UserEntity transform(UserDto dto){
+    public ProductTypeEntity transform(ProductTypeDto dto){
         return super.transform(dto);
     }
-
 
     /**
      * To dto.
@@ -34,7 +33,7 @@ public class UserShallowTransformer   extends AbstractEntityTransformer<UserDto,
      * @return the dto
      */
     @Override
-    public UserDto transform(UserEntity entity) {
+    public ProductTypeDto transform(ProductTypeEntity entity){
         return super.transform(entity);
     }
 }

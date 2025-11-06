@@ -1,7 +1,7 @@
 package io.corementor.finexp.rest.security;
 
-import io.corementor.finexp.common.RoleDto;
-import io.corementor.finexp.orchestrator.RoleEntityOrchestratorQueryProcessor;
+import io.corementor.finexp.common.dto.RoleDto;
+import io.corementor.finexp.orchestrator.security.RoleEntityOrchestratorQueryProcessor;
 import io.corementor.finexp.core.security.domain.RoleEntity;
 import io.corementor.finexp.core.security.service.RoleQueryServiceProcessor;
 import io.corementor.finexp.core.security.service.RoleService;
@@ -13,7 +13,7 @@ import psychemesh.framework.core.response.Response;
 import java.util.List;
 
 /**
- * The Role resource class.
+ * The Class Role resource .
  *
  * @author Blaise Mugisha
  * @version 1.0
@@ -30,6 +30,9 @@ public class RoleResource {
      * The role query service
      */
     private final RoleQueryServiceProcessor roleQueryServiceProcessor;
+    /**
+     * The role orchestrator query processor
+     */
     private final RoleEntityOrchestratorQueryProcessor roleEntityOrchestratorQueryProcessor;
 
     /**
@@ -55,7 +58,6 @@ public class RoleResource {
         return
                 roleQueryServiceProcessor.findAllRoles();
     }*/
-
     @GetMapping("/search/criteria/all")
     @ResponseStatus(HttpStatus.OK)
     public Response<List<RoleDto>> getAllActiveRoles() {

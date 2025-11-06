@@ -1,38 +1,40 @@
-package io.corementor.finexp.transformers;
+package io.corementor.finexp.transformers.security;
 
-import io.corementor.finexp.common.RoleDto;
-import io.corementor.finexp.core.security.domain.RoleEntity;
+import io.corementor.finexp.common.dto.UserDto;
+import io.corementor.finexp.core.security.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import psychemesh.framework.transformer.AbstractEntityTransformer;
 
 /**
- * The Class Role Shallow Transformer.
- * @author Blaise Mugisha
+ * The Class user shallow transformer
+ * @author BLAISE MUGISHA
  * @version 1.0
  */
 @RequiredArgsConstructor
 @Service
-public class RoleShallowTransformer  extends AbstractEntityTransformer<RoleDto, RoleEntity> {
+public class UserShallowTransformer extends AbstractEntityTransformer<UserDto, UserEntity> {
+
     /**
      * To entity.
      *
      * @param dto the dto
-     * @return the supplier entity
+     * @return the entity
      */
     @Override
-    public RoleEntity transform(RoleDto dto){
+    public UserEntity transform(UserDto dto){
         return super.transform(dto);
     }
+
 
     /**
      * To dto.
      *
      * @param entity the entity
-     * @return the supplier dto
+     * @return the dto
      */
     @Override
-    public RoleDto transform(RoleEntity entity) {
+    public UserDto transform(UserEntity entity) {
         return super.transform(entity);
     }
 }

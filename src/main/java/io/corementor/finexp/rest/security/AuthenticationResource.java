@@ -1,8 +1,8 @@
 package io.corementor.finexp.rest.security;
 
-import io.corementor.finexp.common.AuthResponse;
-import io.corementor.finexp.common.LoginDto;
-import io.corementor.finexp.common.RefreshTokenRequest;
+import io.corementor.finexp.common.dto.AuthResponse;
+import io.corementor.finexp.common.dto.LoginDto;
+import io.corementor.finexp.common.dto.RefreshTokenRequest;
 import io.corementor.finexp.core.security.config.JwtService;
 import io.corementor.finexp.core.security.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;

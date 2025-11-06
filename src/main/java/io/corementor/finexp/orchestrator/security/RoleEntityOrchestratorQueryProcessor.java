@@ -1,8 +1,8 @@
-package io.corementor.finexp.orchestrator;
+package io.corementor.finexp.orchestrator.security;
 
-import io.corementor.finexp.common.RoleDto;
+import io.corementor.finexp.common.dto.RoleDto;
 import io.corementor.finexp.core.security.service.RoleQueryServiceProcessor;
-import io.corementor.finexp.transformers.RoleShallowTransformer;
+import io.corementor.finexp.transformers.security.RoleShallowTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import psychemesh.framework.core.response.Response;

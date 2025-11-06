@@ -69,4 +69,9 @@ public class UserQueryServiceProcessor {
     public Page<UserEntity> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
+
+    public int countUsers() {
+        return
+        userRepository.countAllByState(EEntityLifeCycle.ACTIVE);
+    }
 }

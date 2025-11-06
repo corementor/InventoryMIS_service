@@ -1,5 +1,6 @@
 package io.corementor.finexp.core.inventory.sales.salesOrder.repository;
 
+import io.corementor.finexp.common.EOrderHistoryStatus;
 import io.corementor.finexp.core.inventory.sales.salesOrder.domain.SalesOrderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -58,4 +59,21 @@ public interface ISalesOrderRepository extends JpaRepository<SalesOrderEntity, U
     @Query("SELECT so FROM SalesOrderEntity so JOIN so.orderItems soi WHERE soi.id=:itemId")
     Optional<SalesOrderEntity> findSalesOrderByProductOrderItemEntity(@Param("itemId") UUID itemId);
 
+
+    /**
+     * Count All By state
+     *
+     * @param state EEntityLifeCycle
+     * @return Integer
+     */
+    int countAllByState(EEntityLifeCycle state);
+
+    /**
+     * Count All By status and state
+     *
+     * @param status EEntityLifeCycle
+     * @param state  EEntityLifeCycle
+     * @return Integer
+     */
+    int countAllByStatusAndState(EOrderHistoryStatus status, EEntityLifeCycle state);
 }

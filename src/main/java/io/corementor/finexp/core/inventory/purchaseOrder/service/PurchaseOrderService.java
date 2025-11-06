@@ -2,7 +2,9 @@ package io.corementor.finexp.core.inventory.purchaseOrder.service;
 
 
 import io.corementor.finexp.base.IMessage;
+import io.corementor.finexp.base.SequenceNumberGeneratorUtil;
 import io.corementor.finexp.common.*;
+ import io.corementor.finexp.common.dto.RequestDto;
 import io.corementor.finexp.core.inventory.purchaseOrder.domain.ProductOrderItemEntity;
 import io.corementor.finexp.core.inventory.productType.domain.ProductTypeEntity;
 import io.corementor.finexp.core.inventory.productType.service.ProductTypeQueryService;
@@ -51,7 +53,6 @@ public class PurchaseOrderService {
      */
 
     private final PurchaseOrderHistoryService purchaseOrderHistoryService;
-
 
 
     /**
@@ -548,5 +549,6 @@ public class PurchaseOrderService {
             return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
         }
     }
+
 
 }

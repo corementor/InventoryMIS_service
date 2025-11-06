@@ -2,6 +2,8 @@ package io.corementor.finexp.core.inventory.purchaseOrder.service;
 
 
 import io.corementor.finexp.base.IMessage;
+import io.corementor.finexp.common.EOrderHistoryStatus;
+import io.corementor.finexp.common.dto.PurchaseOrderReportDto;
 import io.corementor.finexp.core.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import io.corementor.finexp.core.inventory.purchaseOrder.repository.IPurchaseOrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import psychemesh.framework.common.util.EEntityLifeCycle;
 import psychemesh.framework.core.message.IUserMessage;
 import psychemesh.framework.core.response.Response;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,5 +54,23 @@ public class PurchaseOrderQueryService {
         List<PurchaseOrderEntity> purchaseOrderList = purchaseOrderRepository
                 .findAllActiveOrdersWithActiveItems(EEntityLifeCycle.ACTIVE);
         return new Response<>(purchaseOrderList, IUserMessage.INFORMATION_FOUND);
+    }
+
+    /**
+     * generate report
+     * @return response <Purchase order report dto>
+     */
+    public Response<PurchaseOrderReportDto> generateReport() {
+
+        PurchaseOrderReportDto purchaseOrderReportDto = new PurchaseOrderReportDto();
+
+        purchaseOrderReportDto.setTotalPurchaseOrders(BigDecimal.valueOf(this.purchaseOrderRepository.countAllByState(EEntityLifeCycle.ACTIVE)));
+        purchaseOrderReportDto.setTotalCreated(BigDecimal.valueOf(this.purchaseOrderRepository.countAllByStatusAndState(EOrderHistoryStatus.CREATED, EEntityLifeCycle.ACTIVE)));
+        purchaseOrderReportDto.setTotalSubmitted(BigDecimal.valueOf(this.purchaseOrderRepository.countAllByStatusAndState(EOrderHistoryStatus.SUBMITTED, EEntityLifeCycle.ACTIVE)));
+        purchaseOrderReportDto.setTotalApproved(BigDecimal.valueOf(this.purchaseOrderRepository.countAllByStatusAndState(EOrderHistoryStatus.APPROVED, EEntityLifeCycle.ACTIVE)));
+        purchaseOrderReportDto.setTotalReturned(BigDecimal.valueOf(this.purchaseOrderRepository.countAllByStatusAndState(EOrderHistoryStatus.RETURNED, EEntityLifeCycle.ACTIVE)));
+
+        return new Response<>(purchaseOrderReportDto, IUserMessage.INFORMATION_FOUND);
+
     }
 }

@@ -1,6 +1,7 @@
-package io.corementor.finexp.common;
+package io.corementor.finexp.base;
 
-import io.corementor.finexp.base.ISequenceNumberService;
+import io.corementor.finexp.common.ESequencePrefix;
+import io.corementor.finexp.common.ESequenceType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,9 +1,9 @@
 package io.corementor.finexp.rest.security;
 
 import io.corementor.finexp.base.IMessage;
-import io.corementor.finexp.common.UserDto;
-import io.corementor.finexp.orchestrator.UserEntityOrchestratorProcessor;
-import io.corementor.finexp.orchestrator.UserEntityOrchestratorQueryProcessor;
+import io.corementor.finexp.common.dto.UserDto;
+import io.corementor.finexp.orchestrator.security.UserEntityOrchestratorProcessor;
+import io.corementor.finexp.orchestrator.security.UserEntityOrchestratorQueryProcessor;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

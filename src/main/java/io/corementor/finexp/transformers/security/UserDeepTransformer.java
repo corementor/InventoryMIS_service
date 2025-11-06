@@ -1,6 +1,6 @@
-package io.corementor.finexp.transformers;
+package io.corementor.finexp.transformers.security;
 
-import io.corementor.finexp.common.UserDto;
+import io.corementor.finexp.common.dto.UserDto;
 import io.corementor.finexp.core.security.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
