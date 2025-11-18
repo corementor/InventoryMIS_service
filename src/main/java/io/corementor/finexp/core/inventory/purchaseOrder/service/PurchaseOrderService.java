@@ -1,7 +1,7 @@
 package io.corementor.finexp.core.inventory.purchaseOrder.service;
 
 
-import io.corementor.finexp.base.IMessage;
+ 
 import io.corementor.finexp.base.SequenceNumberGeneratorUtil;
 import io.corementor.finexp.common.*;
  import io.corementor.finexp.common.dto.RequestDto;
@@ -61,7 +61,7 @@ public class PurchaseOrderService {
     public Response<PurchaseOrderEntity> createPurchaseOrder(PurchaseOrderEntity thePurchaseOrderEntity) {
         try {
             if (thePurchaseOrderEntity == null) {
-                return new Response<>(IMessage.INVALID_INPUT);
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
             }
 
             // Generate purchase order number
@@ -139,14 +139,14 @@ public class PurchaseOrderService {
 
             purchaseOrderHistoryService.createPurchaseOrderHistory(savedOrder, "INITIAL PURCHASE ORDER HISTORY");
 
-            return new Response<>(savedOrder, IMessage.INFORMATION_SAVED);
+            return new Response<>(savedOrder, IUserMessage.INFORMATION_SAVED);
 
         } catch (IllegalArgumentException ex) {
             log.error("Validation error creating purchase order: {}", ex.getMessage());
-            return new Response<>(IMessage.INFORMATION_NOT_SAVED);
+            return new Response<>(IUserMessage.INFORMATION_NOT_SAVED);
         } catch (Exception ex) {
             log.error("Error creating purchase order: {}", ex.getMessage(), ex);
-            return new Response<>(IMessage.INFORMATION_NOT_SAVED);
+            return new Response<>(IUserMessage.INFORMATION_NOT_SAVED);
         }
     }
 
@@ -159,7 +159,7 @@ public class PurchaseOrderService {
     public Response<PurchaseOrderEntity> updatePurchaseOrderWithItems(PurchaseOrderEntity thePurchaseOrderEntity) {
         try {
             if (thePurchaseOrderEntity == null || thePurchaseOrderEntity.getId() == null) {
-                return new Response<>(IMessage.INVALID_INPUT);
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
             }
 
             // Find existing purchase order with items
@@ -206,11 +206,11 @@ public class PurchaseOrderService {
             existingOrder.setModifiedAt(LocalDateTime.now());
 
             PurchaseOrderEntity updatedOrder = purchaseOrderRepository.save(existingOrder);
-            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+            return new Response<>(updatedOrder, IUserMessage.INFORMATION_UPDATED);
 
         } catch (Exception ex) {
             log.error("Error updating purchase order with items: {}", ex.getMessage(), ex);
-            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
+            return new Response<>(IUserMessage.ENTITY_IS_NOT_UPDATEABLE);
         }
     }
 
@@ -354,7 +354,7 @@ public class PurchaseOrderService {
     public Response<PurchaseOrderEntity> deletePurchaseOrderItem(UUID theId) {
         try {
             if (theId == null) {
-                return new Response<>(IMessage.INVALID_INPUT);
+                return new Response<>(IUserMessage.DATA_INTEGRITY_VIOLATION);
             }
 
             Optional<PurchaseOrderEntity> optionalOrder =
@@ -463,11 +463,11 @@ public class PurchaseOrderService {
 
             purchaseOrderHistoryService.createPurchaseOrderHistory(updatedOrder, requestDto.getComment());
 
-            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+            return new Response<>(updatedOrder, IUserMessage.INFORMATION_UPDATED);
 
         } catch (Exception ex) {
             log.error("Error submitting purchase order for approval: {}", ex.getMessage(), ex);
-            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
+            return new Response<>(IUserMessage.INFORMATION_NOT_SAVED);
         }
     }
 
@@ -502,11 +502,11 @@ public class PurchaseOrderService {
             }
             purchaseOrderHistoryService.createPurchaseOrderHistory(updatedOrder, comment);
 
-            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+            return new Response<>(updatedOrder, IUserMessage.INFORMATION_UPDATED);
 
         } catch (Exception ex) {
             log.error("Error approving purchase order: {}", ex.getMessage(), ex);
-            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
+            return new Response<>(IUserMessage.INFORMATION_NOT_SAVED);
         }
     }
 
@@ -542,11 +542,11 @@ public class PurchaseOrderService {
             purchaseOrderHistoryService.createPurchaseOrderHistory(updatedOrder,
                     "Order returned by manager. Reason: " + requestDto.getComment());
 
-            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+            return new Response<>(updatedOrder, IUserMessage.INFORMATION_UPDATED);
 
         } catch (Exception ex) {
             log.error("Error returning purchase order: {}", ex.getMessage(), ex);
-            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
+            return new Response<>(IUserMessage.INFORMATION_NOT_SAVED);
         }
     }
 

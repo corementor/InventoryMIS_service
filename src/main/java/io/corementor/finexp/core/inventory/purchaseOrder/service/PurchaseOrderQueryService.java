@@ -1,7 +1,7 @@
 package io.corementor.finexp.core.inventory.purchaseOrder.service;
 
 
-import io.corementor.finexp.base.IMessage;
+
 import io.corementor.finexp.common.EOrderHistoryStatus;
 import io.corementor.finexp.common.dto.PurchaseOrderReportDto;
 import io.corementor.finexp.core.inventory.purchaseOrder.domain.PurchaseOrderEntity;
@@ -42,8 +42,8 @@ public class PurchaseOrderQueryService {
      */
     public Response<PurchaseOrderEntity> findPurchaseOrderById(UUID id) {
         PurchaseOrderEntity purchaseOrderEntity = purchaseOrderRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(IMessage.INFORMATION_NOT_FOUND, "Purchase order object not found"));
-        return new Response<>(purchaseOrderEntity, IMessage.INFORMATION_FOUND);
+                .orElseThrow(() -> new ObjectNotFoundException(IUserMessage.INFORMATION_NOT_FOUND, "Purchase order object not found"));
+        return new Response<>(purchaseOrderEntity, IUserMessage.INFORMATION_FOUND);
     }
 
     /**

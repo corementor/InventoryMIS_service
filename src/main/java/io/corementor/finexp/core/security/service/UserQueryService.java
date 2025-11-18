@@ -1,6 +1,6 @@
 package io.corementor.finexp.core.security.service;
 
-import io.corementor.finexp.base.IMessage;
+
 import io.corementor.finexp.core.security.domain.UserEntity;
 import io.corementor.finexp.core.security.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import psychemesh.framework.common.util.EEntityLifeCycle;
+import psychemesh.framework.core.message.IUserMessage;
 import psychemesh.framework.core.response.Response;
 
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.UUID;
  */
 @Service
 @RequiredArgsConstructor
-public class UserQueryServiceProcessor {
+public class UserQueryService {
     /**
      * The User repository service
      */
@@ -44,7 +45,7 @@ public class UserQueryServiceProcessor {
      */
     public Response<UserEntity> findUserById(UUID id) {
         Optional<UserEntity> optionalUser = userRepository.findByIdAndState(id, EEntityLifeCycle.ACTIVE);
-        return optionalUser.map(userEntity -> new Response<>(userEntity, IMessage.INFORMATION_FOUND)).orElseGet(() -> new Response<>(IMessage.INFORMATION_NOT_FOUND));
+        return optionalUser.map(userEntity -> new Response<>(userEntity, IUserMessage.INFORMATION_FOUND)).orElseGet(() -> new Response<>(IUserMessage.INFORMATION_NOT_FOUND));
 
     }
 
@@ -55,7 +56,7 @@ public class UserQueryServiceProcessor {
      */
     public Response<UserEntity> findUserByEntity(UserEntity theUser) {
         Optional<UserEntity> optionalUser = userRepository.findUserEntityByIdAndState(theUser.getId(), EEntityLifeCycle.ACTIVE);
-        return optionalUser.map(userEntity -> new Response<>(userEntity, IMessage.INFORMATION_FOUND)).orElseGet(() -> new Response<>(IMessage.INFORMATION_NOT_FOUND));
+        return optionalUser.map(userEntity -> new Response<>(userEntity, psychemesh.framework.core.message.IUserMessage.INFORMATION_FOUND)).orElseGet(() -> new Response<>(IUserMessage.INFORMATION_NOT_FOUND));
     }
 
 

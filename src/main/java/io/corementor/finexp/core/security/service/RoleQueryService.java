@@ -1,7 +1,6 @@
 package io.corementor.finexp.core.security.service;
 
-import io.corementor.finexp.base.IMessage;
-import io.corementor.finexp.core.security.domain.RoleEntity;
+ import io.corementor.finexp.core.security.domain.RoleEntity;
 import io.corementor.finexp.core.security.repository.IRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ import java.util.UUID;
  */
 @Service
 @RequiredArgsConstructor
-public class RoleQueryServiceProcessor {
+public class RoleQueryService {
     /**
      * The role repository
      */
@@ -36,10 +35,10 @@ public class RoleQueryServiceProcessor {
     public Response<RoleEntity> findByRoleNameAndState(String roleName) {
         Optional<RoleEntity> found = repository.findAllByRoleNameAndState(roleName, EEntityLifeCycle.ACTIVE);
         if (found.isEmpty()) {
-            return new Response<>(IMessage.INFORMATION_NOT_FOUND);
+            return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
         } else {
             RoleEntity roleEntity = found.get();
-            return new Response<>(roleEntity, IMessage.INFORMATION_FOUND);
+            return new Response<>(roleEntity, IUserMessage.INFORMATION_FOUND);
         }
     }
 
@@ -47,9 +46,9 @@ public class RoleQueryServiceProcessor {
         Optional<RoleEntity>found=repository.findRoleEntityByIdAndState(roleId,EEntityLifeCycle.ACTIVE);
         if(found.isPresent()){
             RoleEntity roleEntity=found.get();
-            return new Response<>(roleEntity,IMessage.INFORMATION_FOUND);
+            return new Response<>(roleEntity,IUserMessage.INFORMATION_FOUND);
         }else{
-            return new Response<>(IMessage.INFORMATION_NOT_FOUND);
+            return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
         }
     }
 

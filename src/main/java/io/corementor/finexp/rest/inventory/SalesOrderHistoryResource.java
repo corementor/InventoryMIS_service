@@ -2,7 +2,7 @@ package io.corementor.finexp.rest.inventory;
 
 
 import io.corementor.finexp.core.inventory.sales.salesOrderHistory.domain.SalesOrderHistoryEntity;
-import io.corementor.finexp.core.inventory.sales.salesOrderHistory.service.SalesOrderHistoryQueryServiceProcessor;
+import io.corementor.finexp.core.inventory.sales.salesOrderHistory.service.SalesOrderHistoryQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class SalesOrderHistoryResource {
      * The sales order history query service processor
      */
 
-    private final SalesOrderHistoryQueryServiceProcessor salesOrderHistoryQueryServiceProcessor;
+    private final SalesOrderHistoryQueryService salesOrderHistoryQueryService;
 
     /**
      * Get Sales order history
@@ -39,6 +39,6 @@ public class SalesOrderHistoryResource {
     @ResponseStatus(HttpStatus.OK)
     public Response<List<SalesOrderHistoryEntity>> getSalesOrderHistory(
             @PathVariable UUID salesOrderId) {
-        return salesOrderHistoryQueryServiceProcessor.getSalesOrderHistory(salesOrderId);
+        return salesOrderHistoryQueryService.getSalesOrderHistory(salesOrderId);
     }
 }

@@ -1,6 +1,6 @@
 package io.corementor.finexp.rest.security;
 
-import io.corementor.finexp.base.IMessage;
+
 import io.corementor.finexp.common.dto.UserDto;
 import io.corementor.finexp.orchestrator.security.UserEntityOrchestratorProcessor;
 import io.corementor.finexp.orchestrator.security.UserEntityOrchestratorQueryProcessor;
@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import psychemesh.framework.core.message.IUserMessage;
 import psychemesh.framework.core.response.Response;
 
 import java.util.List;
@@ -76,7 +77,7 @@ public class UserResource {
             System.out.println("Raw body: " + body);
             return userEntityOrchestratorProcessor.deleteUser(id);
         } catch (Exception e) {
-            return new Response<>(IMessage.INFORMATION_NOT_FOUND);
+            return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
         }
     }
 

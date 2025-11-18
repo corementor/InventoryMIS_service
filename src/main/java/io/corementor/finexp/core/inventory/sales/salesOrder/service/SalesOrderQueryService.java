@@ -1,6 +1,6 @@
 package io.corementor.finexp.core.inventory.sales.salesOrder.service;
 
-import io.corementor.finexp.base.IMessage;
+
 import io.corementor.finexp.common.EOrderHistoryStatus;
 import io.corementor.finexp.common.dto.SalesOrderReportDto;
 import io.corementor.finexp.core.inventory.sales.salesOrder.domain.SalesOrderEntity;
@@ -41,8 +41,8 @@ public class SalesOrderQueryService {
      */
     public Response<SalesOrderEntity> findSalesOrderById(UUID id) {
         SalesOrderEntity salesOrder = salesOrderRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(IMessage.INFORMATION_NOT_FOUND, "Purchase order object not found"));
-        return new Response<>(salesOrder, IMessage.INFORMATION_FOUND);
+                .orElseThrow(() -> new ObjectNotFoundException(IUserMessage.INFORMATION_NOT_FOUND, "Purchase order object not found"));
+        return new Response<>(salesOrder, IUserMessage.INFORMATION_FOUND);
     }
 
     /**

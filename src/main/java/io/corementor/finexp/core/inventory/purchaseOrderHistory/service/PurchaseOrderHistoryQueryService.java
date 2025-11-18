@@ -1,6 +1,6 @@
 package io.corementor.finexp.core.inventory.purchaseOrderHistory.service;
 
-import io.corementor.finexp.base.IMessage;
+
 import io.corementor.finexp.core.inventory.purchaseOrder.domain.PurchaseOrderEntity;
 import io.corementor.finexp.core.inventory.purchaseOrder.service.PurchaseOrderQueryService;
 import io.corementor.finexp.core.inventory.purchaseOrderHistory.domain.PurchaseOrderHistoryEntity;
@@ -23,7 +23,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PurchaseOrderHistoryQueryServiceProcessor {
+public class PurchaseOrderHistoryQueryService {
 
     /**
      * The purchase order history repo
@@ -61,7 +61,7 @@ public class PurchaseOrderHistoryQueryServiceProcessor {
                 return new Response<>("No history found for this purchase order");
             }
 
-            return new Response<>(history, IMessage.INFORMATION_FOUND);
+            return new Response<>(history, IUserMessage.INFORMATION_FOUND);
 
         } catch (Exception e) {
             log.error("Error retrieving history for purchase order {}: {}", purchaseOrderId, e.getMessage());

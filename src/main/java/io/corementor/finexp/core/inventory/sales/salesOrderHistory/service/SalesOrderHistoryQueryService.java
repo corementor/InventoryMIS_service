@@ -1,7 +1,5 @@
 package io.corementor.finexp.core.inventory.sales.salesOrderHistory.service;
 
-import io.corementor.finexp.base.IMessage;
-
 import io.corementor.finexp.core.inventory.sales.salesOrder.domain.SalesOrderEntity;
 import io.corementor.finexp.core.inventory.sales.salesOrder.service.SalesOrderQueryService;
 import io.corementor.finexp.core.inventory.sales.salesOrderHistory.domain.SalesOrderHistoryEntity;
@@ -24,7 +22,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SalesOrderHistoryQueryServiceProcessor {
+public class SalesOrderHistoryQueryService {
 
     /**
      * The sales order history repo
@@ -62,7 +60,7 @@ public class SalesOrderHistoryQueryServiceProcessor {
                 return new Response<>("No history found for this sales order");
             }
 
-            return new Response<>(history, IMessage.INFORMATION_FOUND);
+            return new Response<>(history, IUserMessage.INFORMATION_FOUND);
 
         } catch (Exception e) {
             log.error("Error retrieving history for sales order {}: {}", salesOrderId, e.getMessage());

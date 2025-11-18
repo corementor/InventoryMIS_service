@@ -1,6 +1,6 @@
 package io.corementor.finexp.core.inventory.productType.service;
 
-import io.corementor.finexp.base.IMessage;
+
 import io.corementor.finexp.core.inventory.productType.domain.ProductTypeEntity;
 import io.corementor.finexp.core.inventory.productType.repository.IProductTypeRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +38,8 @@ public class ProductTypeQueryService {
      */
     public Response<ProductTypeEntity> findProductTypeById(UUID id) {
         ProductTypeEntity productType = productTypeRepository.findByIdAndState(id, EEntityLifeCycle.ACTIVE)
-                .orElseThrow(() -> new ObjectNotFoundException(IMessage.INFORMATION_NOT_FOUND, "Product type  object not found"));
-        return new Response<>(productType, IMessage.INFORMATION_FOUND);
+                .orElseThrow(() -> new ObjectNotFoundException(IUserMessage.INFORMATION_NOT_FOUND, "Product type  object not found"));
+        return new Response<>(productType, IUserMessage.INFORMATION_FOUND);
     }
 
     /**

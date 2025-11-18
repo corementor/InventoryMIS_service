@@ -1,8 +1,8 @@
 package io.corementor.finexp.orchestrator.security;
 
 import io.corementor.finexp.common.dto.RoleDto;
-import io.corementor.finexp.core.security.service.RoleQueryServiceProcessor;
-import io.corementor.finexp.transformers.security.RoleShallowTransformer;
+import io.corementor.finexp.core.security.service.RoleQueryService;
+import io.corementor.finexp.objectTransformer.security.RoleShallowTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import psychemesh.framework.core.response.Response;
@@ -24,7 +24,7 @@ public class RoleEntityOrchestratorQueryProcessor {
     /**
      * The role shallow query transformer
      */
-    private final RoleQueryServiceProcessor roleQueryServiceProcessor;
+    private final RoleQueryService roleQueryService;
 
     /**
      * List all roles.
@@ -33,7 +33,7 @@ public class RoleEntityOrchestratorQueryProcessor {
      */
     public Response<List<RoleDto>> listAllRoles() {
         return roleShallowTransformer.transformList(
-                roleQueryServiceProcessor.findAllRoles()
+                roleQueryService.findAllRoles()
         );
     }
 }

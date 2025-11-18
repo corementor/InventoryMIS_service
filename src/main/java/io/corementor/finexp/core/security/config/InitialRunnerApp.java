@@ -1,6 +1,6 @@
 package io.corementor.finexp.core.security.config;
 
-import io.corementor.finexp.core.security.service.UserQueryServiceProcessor;
+import io.corementor.finexp.core.security.service.UserQueryService;
 import io.corementor.finexp.core.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class InitialRunnerApp implements CommandLineRunner {
     /**
      * The User Query processor service
      */
-    private final UserQueryServiceProcessor userEntityQueryServiceProcessor;
+    private final UserQueryService userEntityQueryServiceProcessor;
 
     @Override
     public void run(String... args) {

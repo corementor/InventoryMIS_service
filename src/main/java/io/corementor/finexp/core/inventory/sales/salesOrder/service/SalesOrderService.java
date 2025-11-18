@@ -1,6 +1,6 @@
 package io.corementor.finexp.core.inventory.sales.salesOrder.service;
 
-import io.corementor.finexp.base.IMessage;
+
 import io.corementor.finexp.base.SequenceNumberGeneratorUtil;
 import io.corementor.finexp.common.*;
 import io.corementor.finexp.common.dto.RequestDto;
@@ -62,7 +62,7 @@ public class SalesOrderService {
     public Response<SalesOrderEntity> createSalesOrder(SalesOrderEntity theSalesOrderEntity) {
         log.info("CREATE SALES ODER METHOD REACHED");
         try {
-            if (theSalesOrderEntity == null) return new Response<>(IMessage.INVALID_INPUT);
+            if (theSalesOrderEntity == null) return new Response<>(IUserMessage.DATA_INTEGRITY_VIOLATION);
 
             String salesOrderNumber = sequenceNumberGeneratorUtil.getIdentifier(
                     ESequenceType.SALES_ORDER, ESequencePrefix.SALES);
@@ -108,11 +108,11 @@ public class SalesOrderService {
             SalesOrderEntity savedOrder = salesOrderRepository.save(theSalesOrderEntity);
             salesOrderHistoryService.createSalesOrderHistory(savedOrder, "INITIAL SALE HISTORY CREATED");
 
-            return new Response<>(savedOrder, IMessage.INFORMATION_SAVED);
+            return new Response<>(savedOrder, IUserMessage.INFORMATION_SAVED);
 
         } catch (Exception ex) {
             log.error("Error creating sales order with items: {}", ex.getMessage(), ex);
-            return new Response<>(null, IMessage.INFORMATION_NOT_UPDATED);
+            return new Response<>(null, IUserMessage.INFORMATION_NOT_SAVED);
         }
 
     }
@@ -149,7 +149,7 @@ public class SalesOrderService {
     public Response<SalesOrderEntity> updateSalesOrderWithItems(SalesOrderEntity theSalesOrder) {
         try {
             if (theSalesOrder == null || theSalesOrder.getId() == null) {
-                return new Response<>(IMessage.INVALID_INPUT);
+                return new Response<>(IUserMessage.INFORMATION_NOT_SAVED);
             }
 
             // Find existing purchase order with items
@@ -188,12 +188,12 @@ public class SalesOrderService {
             existingOrder.setModifiedAt(LocalDateTime.now());
 
             SalesOrderEntity updatedOrder = salesOrderRepository.save(existingOrder);
-            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+            return new Response<>(updatedOrder, IUserMessage.INFORMATION_UPDATED);
 
 
         } catch (Exception ex) {
             log.error("Error updating sales order with items: {}", ex.getMessage(), ex);
-            return new Response<>(null, IMessage.INFORMATION_NOT_UPDATED);
+            return new Response<>(null, IUserMessage.INFORMATION_NOT_SAVED);
 
         }
 
@@ -307,7 +307,7 @@ public class SalesOrderService {
     public Response<SalesOrderEntity> deleteSalesOrderItem(UUID theId) {
         try {
             if (theId == null) {
-                return new Response<>(IMessage.INVALID_INPUT);
+                return new Response<>(IUserMessage.DATA_INTEGRITY_VIOLATION);
 
             }
 
@@ -338,7 +338,7 @@ public class SalesOrderService {
             order.setModifiedAt(LocalDateTime.now());
 
             SalesOrderEntity saved = salesOrderRepository.save(order);
-            return new Response<>(saved, IMessage.INFORMATION_UPDATED);
+            return new Response<>(saved, IUserMessage.INFORMATION_UPDATED);
 
 
         } catch (Exception e) {
@@ -375,11 +375,11 @@ public class SalesOrderService {
 
             salesOrderHistoryService.createSalesOrderHistory(updatedOrder, requestDto.getComment());
 
-            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+            return new Response<>(updatedOrder, IUserMessage.INFORMATION_UPDATED);
 
         } catch (Exception ex) {
             log.error("Error submitting purchase order for approval: {}", ex.getMessage(), ex);
-            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
+            return new Response<>(IUserMessage.INFORMATION_NOT_SAVED);
         }
     }
 
@@ -414,11 +414,11 @@ public class SalesOrderService {
             }
             salesOrderHistoryService.createSalesOrderHistory(updatedOrder, comment);
 
-            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+            return new Response<>(updatedOrder, IUserMessage.INFORMATION_UPDATED);
 
         } catch (Exception ex) {
             log.error("Error approving purchase order: {}", ex.getMessage(), ex);
-            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
+            return new Response<>(IUserMessage.INFORMATION_NOT_SAVED);
         }
     }
 
@@ -454,11 +454,11 @@ public class SalesOrderService {
             salesOrderHistoryService.createSalesOrderHistory(updatedOrder,
                     "Order returned by manager. Reason: " + requestDto.getComment());
 
-            return new Response<>(updatedOrder, IMessage.INFORMATION_UPDATED);
+            return new Response<>(updatedOrder, IUserMessage.INFORMATION_UPDATED);
 
         } catch (Exception ex) {
             log.error("Error returning purchase order: {}", ex.getMessage(), ex);
-            return new Response<>(IMessage.INFORMATION_NOT_UPDATED);
+            return new Response<>(IUserMessage.INFORMATION_NOT_SAVED);
         }
     }
 

@@ -1,10 +1,11 @@
 package io.corementor.finexp.core.security.service;
 
-import io.corementor.finexp.base.IMessage;
+
 import io.corementor.finexp.core.security.domain.RoleEntity;
 import io.corementor.finexp.core.security.repository.IRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import psychemesh.framework.core.message.IUserMessage;
 import psychemesh.framework.core.response.Response;
 
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ public class RoleService {
      */
     public Response<RoleEntity> createRole(String roleName) {
         if (roleName == null) {
-            return new Response<>(IMessage.INVALID_INPUT);
+            return new Response<>(IUserMessage.DATA_INTEGRITY_VIOLATION);
         }
         RoleEntity roleEntity = new RoleEntity();
         roleEntity.setRoleName(roleName);

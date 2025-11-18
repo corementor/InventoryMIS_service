@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 import psychemesh.framework.common.util.EEntityLifeCycle;
+import psychemesh.framework.core.message.IUserMessage;
 
 /**
  * The Interface SequenceNumberService.
@@ -30,7 +31,7 @@ public class SequenceNumberService implements ISequenceNumberService{
     public Long getNextSequenceNumber(ESequenceType type) {
         try{
             SequenceNumber theSequence = sequenceNumberRepo.findSequenceNumberByType(type)
-                    .orElseThrow(()-> new ObjectNotFoundException(IMessage.INFORMATION_NOT_FOUND , "Information Not Found"));
+                    .orElseThrow(()-> new ObjectNotFoundException(IUserMessage.INFORMATION_NOT_FOUND , "Information Not Found"));
             Long number = theSequence.getNumber();
             theSequence.setNumber(number+ 1L);
             sequenceNumberRepo.save(theSequence);

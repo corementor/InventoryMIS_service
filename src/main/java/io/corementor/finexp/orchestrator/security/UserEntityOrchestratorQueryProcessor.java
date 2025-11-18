@@ -1,9 +1,9 @@
 package io.corementor.finexp.orchestrator.security;
 
 import io.corementor.finexp.common.dto.UserDto;
-import io.corementor.finexp.core.security.service.UserQueryServiceProcessor;
-import io.corementor.finexp.transformers.security.UserDeepTransformer;
-import io.corementor.finexp.transformers.security.UserShallowTransformer;
+import io.corementor.finexp.core.security.service.UserQueryService;
+import io.corementor.finexp.objectTransformer.security.UserDeepTransformer;
+import io.corementor.finexp.objectTransformer.security.UserShallowTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import psychemesh.framework.core.response.Response;
@@ -19,7 +19,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserEntityOrchestratorQueryProcessor {
-    private final UserQueryServiceProcessor userEntityQueryServiceProcessor;
+    private final UserQueryService userEntityQueryServiceProcessor;
     private final HashIdUtility hashIdUtility;
     private final UserDeepTransformer userDeepTransformer;
     private final UserShallowTransformer userShallowTransformer;

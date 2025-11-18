@@ -1,9 +1,9 @@
 package io.corementor.finexp.rest.security;
 
 import io.corementor.finexp.common.dto.RoleDto;
+import io.corementor.finexp.core.security.service.RoleQueryService;
 import io.corementor.finexp.orchestrator.security.RoleEntityOrchestratorQueryProcessor;
 import io.corementor.finexp.core.security.domain.RoleEntity;
-import io.corementor.finexp.core.security.service.RoleQueryServiceProcessor;
 import io.corementor.finexp.core.security.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class RoleResource {
     /**
      * The role query service
      */
-    private final RoleQueryServiceProcessor roleQueryServiceProcessor;
+    private final RoleQueryService roleQueryService;
     /**
      * The role orchestrator query processor
      */

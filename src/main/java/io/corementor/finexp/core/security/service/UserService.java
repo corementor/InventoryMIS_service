@@ -1,6 +1,6 @@
 package io.corementor.finexp.core.security.service;
 
-import io.corementor.finexp.base.IMessage;
+
 import io.corementor.finexp.common.dto.UserDto;
 import io.corementor.finexp.core.security.domain.RoleEntity;
 import io.corementor.finexp.core.security.domain.UserEntity;
@@ -45,7 +45,7 @@ public class UserService {
      * The user query service
      */
 
-    private final UserQueryServiceProcessor userQueryServiceProcessor;
+    private final UserQueryService userQueryService;
     /**
      * The role repository
      */
@@ -58,7 +58,7 @@ public class UserService {
     /**
      * The role query service
      */
-    private final RoleQueryServiceProcessor roleQueryServiceProcessor;
+    private final RoleQueryService roleQueryService;
 
 
     /**
@@ -106,7 +106,7 @@ public class UserService {
     public Response<UserEntity> createUser(UserEntity userEntity) {
 
         if (userEntity == null) {
-            return new Response<>(IMessage.INVALID_INPUT);
+            return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
         }
 
 
@@ -140,7 +140,7 @@ public class UserService {
     public Response<UserEntity> updateUser(UserEntity theUser) {
         try {
             if (theUser == null || theUser.getId() == null) {
-                return new Response<>(IMessage.INVALID_INPUT);
+                return new Response<>(IUserMessage.INFORMATION_NOT_FOUND);
             }
 
             Optional<UserEntity> optionalUser = userRepository.findById(theUser.getId());
@@ -165,7 +165,7 @@ public class UserService {
             if (theUser.getRole() != null && !theUser.getRole().isEmpty()) {
                 found.getRole().clear();
                 for (RoleEntity roleDto : theUser.getRole()) {
-                    RoleEntity theRole = roleQueryServiceProcessor.findRoleById(roleDto.getId()).getData();
+                    RoleEntity theRole = roleQueryService.findRoleById(roleDto.getId()).getData();
                     if (theRole != null) {
                         found.getRole().add(theRole);
                     }
@@ -220,7 +220,7 @@ public class UserService {
         adminUser.setCreatedAt(LocalDateTime.now());
         RoleEntity adminRole;
         try {
-            adminRole = roleQueryServiceProcessor.findByRoleNameAndState(administratorRole).getData();
+            adminRole = roleQueryService.findByRoleNameAndState(administratorRole).getData();
         } catch (ObjectNotFoundException ex) {
             adminRole = roleService.createRole(administratorRole).getData();
         }

@@ -51,7 +51,7 @@ public class SecurityConfig {
         /* Production only */
 //        configuration.setAllowedOrigins(Arrays.asList("https://yishfe.com","https://www.yishfe.com","http://localhost","http://157.173.97.196:4300","http://157.173.97.196:4200","http://157.173.97.196:8080","http://157.173.97.196"));
         /*UAT only*/
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200","http://localhost:4201"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200","http://localhost:4201","http://207.180.213.111:4200","http://207.180.213.111:4201"));
 //        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200","http://localhost:4201","http://localhost","http://157.173.97.196:4300","http://157.173.97.196:4200","http://157.173.97.196:8080","http://157.173.97.196","http://localhost"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
