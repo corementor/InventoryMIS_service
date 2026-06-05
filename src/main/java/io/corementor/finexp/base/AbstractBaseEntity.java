@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * The abstract class AbstractBaseEntity.
  *
- * @author Jeremie Ukundwa Tuyisenge
+ * @author Blaise Mugisha
  * @version 1.0
  */
 @Deprecated
