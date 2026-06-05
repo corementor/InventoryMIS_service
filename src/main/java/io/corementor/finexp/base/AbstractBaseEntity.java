@@ -15,6 +15,7 @@ import java.util.UUID;
  *
  * @author Blaise Mugisha
  * @version 1.0
+ * @version 2.0
  */
 @Deprecated
 @MappedSuperclass
