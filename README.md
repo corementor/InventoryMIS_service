@@ -1,4 +1,4 @@
-# InventoryMIS_service (finexp)
+# InventoryMIS_service 
 
 A comprehensive **Financial System for Inventory Management** built with Java and Spring Boot. This system manages financial operations related to inventory including purchase orders, sales orders, and product tracking with role-based access control.
 
