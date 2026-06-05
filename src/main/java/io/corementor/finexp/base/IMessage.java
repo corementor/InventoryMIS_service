@@ -3,7 +3,7 @@ package io.corementor.finexp.base;
 /**
  * The Interface IMessage.
  *
- * @author Jeremie Ukundwa Tuyisenge
+ * @author Blaise Mugisha
  * @version 1.0
  */
 
